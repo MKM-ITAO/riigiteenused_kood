@@ -1,0 +1,3 @@
+##Riigiteenused.ee kood
+
+See on riigiteenused.ee kood. Sisaldab ka rakenduse arhitektuurili dokumentatsiooni.
