@@ -1,0 +1,986 @@
+<?php
+/**
+ * @file
+ * Module for additional actions with Teenus content type.
+ *
+ * Teenus content type's edit form changes from hook_form_alter
+ *   (see @rt_teenus_form_alter).
+ * - Predefining service prefix and id depending on service status
+ *   (new or old).
+ * - Predefining service "Teenuse osutaja" block. Service ministry and
+ *    institution are predefined depending on user's role. Ajax callbacks are
+ *    also used here to set up prefix if government or ministry user filling the
+ *    form (expected that this type users does't have institution defined in
+ *    profile so prefix could't be predefined from the beginning).
+ * Additional Teenus edit form's validation.
+ * - Validating if passed service ID (prefix + number) is unique
+ *   (see @rt_teenus_node_validate).
+ * Institution term reference field and Private ministry and institution
+ *    fields are predefined (see @rt_teenus_node_prepare) or added after form
+ *    is submitted (see @rt_teenus_node_presave).
+ * Utility functions and ajax callbacks.
+ */
+
+/*
+ * Access control.
+ * Defining who can modify service nodes.
+ */
+
+define('RT_TEENUS_TEENUS_REALM', 'teenus');
+define('RT_TEENUS_TEENUS_DEFAULT_GRANT_ID', 1);
+define('RT_TEENUS_TEENUS_INSTITUTION_GRANT_ID_PREFIX', 2);
+define('RT_TEENUS_TEENUS_MINISTRY_GRANT_ID_PREFIX', 3);
+define('RT_TEENUS_TEENUS_GOVERNMENT_GRANT_ID', 4);
+
+
+/**
+ * Implements hook_menu().
+ */
+function rt_teenus_menu() {
+  $items['redirect'] = array(
+    'title' => 'User based redirect',
+    'page callback' => '_rt_teenus_user_redirect',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Add grants for all terms int the translation set.
+ *
+ * @param object $term
+ *   Original term object.
+ * @param array $grants
+ *   Grants array passed by the reference.
+ */
+function _rt_teenus_add_grants_for_tset_elements($term, &$grants) {
+  // Also give asses to the services from terms in the same translation set.
+  $languages = language_list();
+  unset($languages[$term->language]);
+  foreach ($languages as $lang_code => $lang_object) {
+    if ($translation_set_component = i18n_taxonomy_term_get_translation($term, $lang_code)) {
+      $grants[RT_TEENUS_TEENUS_REALM][] = RT_TEENUS_TEENUS_INSTITUTION_GRANT_ID_PREFIX . $translation_set_component->tid;
+    }
+  }
+}
+
+/**
+ * Add access grants for the institution term's translation set items.
+ *
+ * @param object $term
+ *   Original term object.
+ * @param array $grants
+ *   Grants array passed by the reference.
+ * @param string $prefix
+ *   Grand id prefix.
+ */
+function _rt_teenus_add_access_grants_for_tset_elements($term, &$grants, $prefix) {
+  if (empty($prefix)) {
+    return;
+  }
+
+  $languages = language_list();
+  unset($languages[$term->language]);
+  foreach ($languages as $lang_code => $lang_object) {
+    if ($translation_set_component = i18n_taxonomy_term_get_translation($term, $lang_code)) {
+      $grants[] = array(
+        'realm' => RT_TEENUS_TEENUS_REALM,
+        'gid' => $prefix . $translation_set_component->tid,
+        'grant_view' => 1,
+        'grant_update' => 1,
+        'grant_delete' => 1,
+        'priority' => 0,
+      );
+    }
+  }
+}
+
+/**
+ * Implements hook_node_grants().
+ *
+ * @see https://www.drupal.org/node/1260948
+ * @see https://www.drupal.org/node/689458#comment-2497228
+ */
+function rt_teenus_node_grants($account, $op) {
+  $grants[RT_TEENUS_TEENUS_REALM] = array();
+
+  $user_account = user_load($account->uid);
+  $user_institution = field_get_items('user', $user_account, 'field_u_asutus');
+  // 'Valitsuse tasemel administraator' role user.
+  if (array_search(ROLE_VALITSUS, $account->roles)) {
+    $grants[RT_TEENUS_TEENUS_REALM] = array(RT_TEENUS_TEENUS_GOVERNMENT_GRANT_ID);
+  }
+  // 'Ministeeriumi administraator' role user.
+  elseif (array_search(ROLE_MINISTEERIUM, $account->roles)) {
+    if (isset($user_institution[0]['tid']) && $ministry_term = taxonomy_term_load($user_institution[0]['tid'])) {
+      $parent_term = taxonomy_get_parents($ministry_term->tid);
+      if (empty($parent_term)) {
+        $grants[RT_TEENUS_TEENUS_REALM][] = RT_TEENUS_TEENUS_MINISTRY_GRANT_ID_PREFIX . $ministry_term->tid;
+        _rt_teenus_add_grants_for_tset_elements($ministry_term, $grants);
+      }
+      // If institution selected for ministry administrator.
+      else {
+        $parent_term_object = taxonomy_term_load(key($parent_term));
+        $grants[RT_TEENUS_TEENUS_REALM][] = RT_TEENUS_TEENUS_MINISTRY_GRANT_ID_PREFIX . $parent_term_object->tid;
+        _rt_teenus_add_grants_for_tset_elements($parent_term_object, $grants);
+      }
+    }
+    else {
+      $grants[RT_TEENUS_TEENUS_REALM] = array(RT_TEENUS_TEENUS_DEFAULT_GRANT_ID);
+    }
+  }
+  // 'Allasutuse administraator' role user.
+  elseif (array_search(ROLE_ALLASUTUS, $account->roles)) {
+    if (isset($user_institution[0]['tid']) && $institution_term = taxonomy_term_load($user_institution[0]['tid'])) {
+      $grants[RT_TEENUS_TEENUS_REALM][] = RT_TEENUS_TEENUS_INSTITUTION_GRANT_ID_PREFIX . $institution_term->tid;
+      _rt_teenus_add_grants_for_tset_elements($institution_term, $grants);
+    }
+    else {
+      $grants[RT_TEENUS_TEENUS_REALM] = array(RT_TEENUS_TEENUS_DEFAULT_GRANT_ID);
+    }
+  }
+  else {
+    $grants[RT_TEENUS_TEENUS_REALM] = array(RT_TEENUS_TEENUS_DEFAULT_GRANT_ID);
+  }
+
+  return $grants;
+}
+
+/**
+ * Implements hook_node_access_records().
+ */
+function rt_teenus_node_access_records($node) {
+  if ($node->type == 'teenus') {
+    $grants = array();
+
+    $service_institution = field_get_items('node', $node, 'field_t_allasutuse_reference');
+    if (isset($service_institution[0]['tid']) && $service_institution_term = taxonomy_term_load($service_institution[0]['tid'])) {
+      $parent_term = taxonomy_get_parents($service_institution_term->tid);
+
+      // Only read rights for default grant.
+      $grants[] = array(
+        'realm' => RT_TEENUS_TEENUS_REALM,
+        'gid' => RT_TEENUS_TEENUS_DEFAULT_GRANT_ID,
+        'grant_view' => 0,
+        'grant_update' => 0,
+        'grant_delete' => 0,
+        'priority' => 0,
+      );
+
+      // Government lvl user can access (edit, delete) all services.
+      $grants[] = array(
+        'realm' => RT_TEENUS_TEENUS_REALM,
+        'gid' => RT_TEENUS_TEENUS_GOVERNMENT_GRANT_ID,
+        'grant_view' => 1,
+        'grant_update' => 1,
+        'grant_delete' => 1,
+        'priority' => 0,
+      );
+
+      if (!empty($parent_term)) {
+        $parent_term = $parent_term[key($parent_term)];
+        // Access permissions for institution / ministry administrators.
+        $grants[] = array(
+          'realm' => RT_TEENUS_TEENUS_REALM,
+          'gid' => RT_TEENUS_TEENUS_MINISTRY_GRANT_ID_PREFIX . $parent_term->tid,
+          'grant_view' => 1,
+          'grant_update' => 1,
+          'grant_delete' => 1,
+          'priority' => 0,
+        );
+        // And for translation set element.
+        _rt_teenus_add_access_grants_for_tset_elements($parent_term, $grants, RT_TEENUS_TEENUS_MINISTRY_GRANT_ID_PREFIX);
+
+        $grants[] = array(
+          'realm' => RT_TEENUS_TEENUS_REALM,
+          'gid' => RT_TEENUS_TEENUS_INSTITUTION_GRANT_ID_PREFIX . $service_institution_term->tid,
+          'grant_view' => 1,
+          'grant_update' => 1,
+          'grant_delete' => 1,
+          'priority' => 0,
+        );
+        // And for translation set element.
+        _rt_teenus_add_access_grants_for_tset_elements($service_institution_term, $grants, RT_TEENUS_TEENUS_INSTITUTION_GRANT_ID_PREFIX);
+      }
+      else {
+        // Anyway add access for ministry administrators if ministry selected
+        // as institution.
+        $grants[] = array(
+          'realm' => RT_TEENUS_TEENUS_REALM,
+          'gid' => RT_TEENUS_TEENUS_MINISTRY_GRANT_ID_PREFIX . $service_institution_term->tid,
+          'grant_view' => 1,
+          'grant_update' => 1,
+          'grant_delete' => 1,
+          'priority' => 0,
+        );
+        // And for translation set element.
+        _rt_teenus_add_access_grants_for_tset_elements($service_institution_term, $grants, RT_TEENUS_TEENUS_MINISTRY_GRANT_ID_PREFIX);
+
+        drupal_set_message(t('Unsupported value of institution! Please select institution not ministry!'), 'error');
+      }
+    }
+
+    return $grants;
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function rt_teenus_form_alter(&$form, &$form_state, $form_id) {
+  global $language, $user;
+  $user = user_load($user->uid);
+  if ($form_id == 'taxonomy_overview_terms' && $form['#vocabulary']->machine_name == 'valitsuse_puu') {
+    $form['#submit'][] = 'rt_teenus_update_ministry_division_term';
+  }
+
+  // Make content view have a filter of Ministrys.
+  if ($form_id == 'views_exposed_form') {
+    if (isset($form['field_t_ministeerium_private_value'])) {
+      $form['field_t_ministeerium_private_value']['#type'] = 'select';
+      $voc = taxonomy_vocabulary_machine_name_load('valitsuse_puu')->vid;
+      $first_lvl_terms = taxonomy_get_tree($voc, 0, 1, FALSE);
+      $form['field_t_ministeerium_private_value']['#options'][''] = t('All');
+      $form['field_t_ministeerium_private_value']['#default_value'] = reset($form['field_t_ministeerium_private_value']['#options']);
+      $form['field_t_ministeerium_private_value']['#size'] = NULL;
+      foreach ($first_lvl_terms as $gov_term) {
+        $form['field_t_ministeerium_private_value']['#options'][$gov_term->name] = $gov_term->name;
+      }
+    }
+
+  }
+  if ($form_id == 'teenus_node_form') {
+    $form['field_t_varu_title']['#access'] = FALSE;
+
+    drupal_add_css('.group-t-statistika {display:none;}', array('type' => 'inline'));
+
+    // Set custom wrapper for prefix field.
+    $form['#id'] = 'teenus-node-form';
+
+    /*
+     * Hide some labels.
+     */
+    $form['field_c_mootmise_aasta'][LANGUAGE_NONE]['#title'] = '';
+    $fc_items = $form['field_c_mootmise_aasta'][LANGUAGE_NONE];
+    foreach ($fc_items as $i => $block) {
+      if (is_numeric($i)) {
+        $form['field_c_mootmise_aasta'][LANGUAGE_NONE][$i]['field_fcf_mootmise_aasta'][LANGUAGE_NONE]['#title'] = '';
+        $form['field_c_mootmise_aasta'][LANGUAGE_NONE][$i]['field_fcf_mootmise_kanal'][LANGUAGE_NONE]['#title'] = '';
+      }
+    }
+
+    /*
+     * Show "Muudatuse vajaduse selgitus" textarea only if same radio button
+     * is selected.
+     */
+    $form['field_t_muudatus_vajav'][LANGUAGE_NONE][0]['value']['#states'] = array(
+      'visible' => array(
+        ':input[name="field_t_teenuse_seisund[und]"]' => array('value' => 'Muudatust vajav'),
+      ),
+    );
+
+    /*
+     * Add groups for channels.
+     */
+    $tmp = $form['field_c_mootmise_aasta'][LANGUAGE_NONE];
+    for ($i = 0; $i < count($tmp); $i++) {
+      if (!isset($tmp[$i])) {
+        continue;
+      }
+      for ($f = 0; $f < count($tmp[$i]['field_fcf_mootmise_kanal'][LANGUAGE_NONE]); $f++) {
+        if (!isset($tmp[$i]['field_fcf_mootmise_kanal'][LANGUAGE_NONE][$f])) {
+          continue;
+        }
+
+        $term_list = $tmp[$i]['field_fcf_mootmise_kanal'][LANGUAGE_NONE][$f]['field_fcf_kanal'][LANGUAGE_NONE]['#options'];
+        $curr_group = '';
+        foreach ($term_list as $key => $text) {
+          if (!taxonomy_get_parents($key) && is_numeric($key)) {
+            $options_one[$text] = array();
+            $curr_group = $text;
+          }
+          else {
+            $options_one[$curr_group][$key] = substr($text, 1);
+          }
+        }
+
+        $tmp[$i]['field_fcf_mootmise_kanal'][LANGUAGE_NONE][$f]['field_fcf_kanal'][LANGUAGE_NONE]['#options'] = $options_one;
+      }
+    }
+    $form['field_c_mootmise_aasta'][LANGUAGE_NONE] = $tmp;
+
+    /*
+     * Generate predefined service prefix and id.
+     * Prefix will be changed to user's institution service automatically on
+     * node editing. All user should have institution defined.
+     */
+    if ($service_id_set = _rt_teenus_get_service_id()) {
+      $old_id = $form['field_t_tunnus'][LANGUAGE_NONE][0]['value']['#default_value'];
+
+      // Change prefix always.
+      $form['field_t_teenuse_prefix'][LANGUAGE_NONE][0]['value']['#default_value']
+        = $service_id_set['prefix'];
+      $form['field_t_teenuse_prefix']['#disabled'] = TRUE;
+      // ID should be the same, but also possible to change it manually.
+      $form['field_t_tunnus'][LANGUAGE_NONE][0]['value']['#default_value']
+        = !empty($old_id) ? $old_id : $service_id_set['id'];
+    }
+
+    /*
+     * Predefine "Teenuse osutaja" block, depending on institution defined
+     * in user's profile.
+     */
+    if ($user) {
+      // User's institution defined in the profile.
+      $ministry_or_institution_tid
+        = isset($user->field_u_asutus[LANGUAGE_NONE]) ? $user->field_u_asutus[LANGUAGE_NONE][0]['tid'] : NULL;
+      // No worries if term not loaded (in case of NULL), it will be controlled
+      // later.
+      // Term in original language.
+      $mi_term_original = taxonomy_term_load($ministry_or_institution_tid);
+      // We should operate with current language translatuion.
+      $mi_term = i18n_taxonomy_term_get_translation($mi_term_original, $language->language);
+
+      $mi_parent_term = FALSE;
+      $mi_term_parent_ref = taxonomy_get_parents($ministry_or_institution_tid);
+      if (!empty($mi_term_parent_ref)) {
+        $mi_parent_term_original = array_values($mi_term_parent_ref);
+        $mi_parent_term_original = $mi_parent_term_original[0];
+
+        $mi_parent_term = i18n_taxonomy_term_get_translation($mi_parent_term_original, $language->language);
+      }
+
+      // 'Valitsuse tasemel administraator' role user.
+      if (array_search(ROLE_VALITSUS, $user->roles)) {
+        // Hide private ministry and institution field.
+        $form['field_t_ministeerium_private']['#access'] = FALSE;
+        $form['field_t_allasutus_private']['#access'] = FALSE;
+
+        /*
+         * Add option groups for "Allasutuse reference" dropdown.
+         */
+
+        $term_list = $form['field_t_allasutuse_reference'][LANGUAGE_NONE]['#options'];
+        $curr_group = '';
+        foreach ($term_list as $key => $text) {
+          $allasutuse_reference_term = taxonomy_term_load($key);
+          if ($allasutuse_reference_term) {
+            if ($allasutuse_reference_term->language != $language->language) {
+              continue;
+            }
+          }
+          if (!taxonomy_get_parents($key) && is_numeric($key)) {
+            $options[$text] = array();
+            $curr_group = $text;
+          }
+          else {
+            $options[$curr_group][$key] = substr($text, 1);
+          }
+        }
+        $form['field_t_allasutuse_reference'][LANGUAGE_NONE]['#options'] = empty($options) ? array() : $options;
+
+        // Set service prefix by selected institution.
+        $form['field_t_allasutuse_reference'][LANGUAGE_NONE]['#ajax']['callback'] = '_rt_teenus_institution_selected_callback';
+        $form['field_t_allasutuse_reference'][LANGUAGE_NONE]['#ajax']['wrapper'] = 'teenus-node-form';
+
+        if (!empty($form_state['values']['field_t_allasutuse_reference'])) {
+          $prefix = NULL;
+          $selected_institution_term_tid
+            = $form_state['values']['field_t_allasutuse_reference'][LANGUAGE_NONE][0]['tid'];
+
+          if ($selected_institution_term = taxonomy_term_load($selected_institution_term_tid)) {
+            $prefix = $selected_institution_term->field_allasutuse_prefix[LANGUAGE_NONE][0]['value'];
+            $service_id_hard_set = _rt_teenus_get_service_id($prefix);
+
+            $form['field_t_teenuse_prefix'][LANGUAGE_NONE][0]['value']['#value'] = $service_id_hard_set['prefix'];
+            $form['field_t_tunnus'][LANGUAGE_NONE][0]['value']['#value'] = $service_id_hard_set['id'];
+          }
+        }
+      }
+      // 'Ministeeriumi administraator' role user.
+      elseif (array_search(ROLE_MINISTEERIUM, $user->roles)) {
+        // Use parent ministry term if institution selected for ministry
+        // administrator.
+        $default_sub_divison = FALSE;
+        $ministry_term = $mi_parent_term ? $mi_parent_term : $mi_term;
+        if ($ministry_term) {
+          // Hide field_t_allasutuse_reference field.
+          $form['field_t_allasutuse_reference']['#access'] = FALSE;
+
+          // Get sub-devision from original node when translating.
+          if (isset($form['#node']->field_t_allasutus_private)) {
+            $default_sub_divison_orig = $form['#node']->field_t_allasutus_private[LANGUAGE_NONE][0]['value'];
+            if ($default_orig_term = taxonomy_get_term_by_name($default_sub_divison_orig, 'valitsuse_puu')) {
+              $default_orig_term = $default_orig_term[key($default_orig_term)];
+              $default_sub_divison = i18n_taxonomy_term_get_translation($default_orig_term, $language->language);
+            }
+          }
+
+          // Disable ministry field and set default value from user profile.
+          $form['field_t_ministeerium_private']['#disabled'] = TRUE;
+          $form['field_t_ministeerium_private'][LANGUAGE_NONE][0]['value']['#default_value']
+            = $ministry_term->name;
+          $form['field_t_ministeerium_private'][LANGUAGE_NONE][0]['value']['#value']
+            = $ministry_term->name;
+
+          // Get user's ministry institutions into options array.
+          $ministry_services_options = array();
+          $ministry_services_ref = taxonomy_get_children($ministry_term->tid);
+          if (!empty($ministry_services_ref)) {
+            foreach ($ministry_services_ref as $tid => $object) {
+              $ministry_services_options[$object->name] = $object->name;
+            }
+          }
+
+          // Change type of institution input field to select and set found
+          // institutions options as values.
+          $form['field_t_allasutus_private'][LANGUAGE_NONE][0]['value']['#type'] = 'select';
+          $form['field_t_allasutus_private'][LANGUAGE_NONE][0]['value']['#options']
+            = $ministry_services_options;
+          unset($form['field_t_allasutus_private'][LANGUAGE_NONE][0]['value']['#size']);
+          // Set default value for institution select list if ministry admin
+          // have institution defined.
+          if ($mi_parent_term && $mi_term || $default_sub_divison) {
+            $form['field_t_allasutus_private'][LANGUAGE_NONE][0]['value']['#default_value']
+              = $default_sub_divison ? $default_sub_divison->name : $mi_term->name;
+          }
+
+          // Set service prefix by selected institution.
+          $form['field_t_allasutus_private'][LANGUAGE_NONE][0]['value']['#ajax']['callback']
+            = '_rt_teenus_institution_selected_callback';
+          $form['field_t_allasutus_private'][LANGUAGE_NONE][0]['value']['#ajax']['wrapper']
+            = 'teenus-node-form';
+          if (!empty($form_state['values']['field_t_allasutus_private'])) {
+            $prefix = NULL;
+            $selected_institution_term_name
+              = $form_state['values']['field_t_allasutus_private'][LANGUAGE_NONE][0]['value'];
+
+            if ($selected_institution_term = taxonomy_get_term_by_name($selected_institution_term_name, 'valitsuse_puu')) {
+              $selected_institution_term
+                = $selected_institution_term[key($selected_institution_term)];
+              $prefix
+                = $selected_institution_term->field_allasutuse_prefix[LANGUAGE_NONE][0]['value'];
+              $service_id_hard_set = _rt_teenus_get_service_id($prefix);
+
+              $form['field_t_teenuse_prefix'][LANGUAGE_NONE][0]['value']['#value']
+                = $service_id_hard_set['prefix'];
+              $form['field_t_tunnus'][LANGUAGE_NONE][0]['value']['#value']
+                = $service_id_hard_set['id'];
+            }
+          }
+        }
+        else {
+          drupal_set_message(t('User ministry not found: @tid', array('@tid' => $ministry_or_institution_tid)), 'error');
+        }
+      }
+      // 'Allasutuse administraator' role user.
+      else {
+        if ($mi_term && $mi_parent_term) {
+          $form['field_t_allasutuse_reference']['#access'] = FALSE;
+
+          // Both ministry and institution fields are disabled and provided
+          // with default values from user profile.
+          $form['field_t_ministeerium_private']['#disabled'] = TRUE;
+          $form['field_t_ministeerium_private'][LANGUAGE_NONE][0]['value']['#default_value']
+            = $mi_parent_term ? $mi_parent_term->name : '';
+          $form['field_t_ministeerium_private'][LANGUAGE_NONE][0]['value']['#value']
+            = $mi_parent_term ? $mi_parent_term->name : '';
+
+          $form['field_t_allasutus_private']['#disabled'] = TRUE;
+          $form['field_t_allasutus_private'][LANGUAGE_NONE][0]['value']['#default_value']
+            = $mi_term->name;
+          $form['field_t_allasutus_private'][LANGUAGE_NONE][0]['value']['#value']
+            = $mi_term->name;
+        }
+        else {
+          drupal_set_message(t('One of the Allasutus administrator user term is not setted!'), 'error');
+        }
+      }
+    }
+    else {
+      drupal_set_message(t('Unable to load user profile: @uid', array('@uid' => $form['uid']['#value'])), 'error');
+    }
+
+    foreach ($form['field_c_mootmise_aasta'][LANGUAGE_NONE] as $a_key => $m_year) {
+      if (!is_numeric($a_key)) {
+        continue;
+      }
+      foreach ($m_year['field_fcf_mootmise_kanal'][LANGUAGE_NONE] as $c_key => $c_channel) {
+        if (!is_numeric($c_key)) {
+          continue;
+        }
+        foreach ($c_channel['field_fcf_kanal'][LANGUAGE_NONE]['#options'] as $channel_term_name => $channel) {
+          $channel_term = taxonomy_get_term_by_name($channel_term_name);
+          if (!empty($channel_term)) {
+            if (reset($channel_term)->language != $language->language) {
+              unset($form['field_c_mootmise_aasta'][LANGUAGE_NONE][$a_key]['field_fcf_mootmise_kanal'][LANGUAGE_NONE][$c_key]['field_fcf_kanal'][LANGUAGE_NONE]['#options'][$channel_term_name]);
+            }
+          }
+        }
+      }
+    }
+  }
+
+}
+
+/**
+ * Implements hook_node_validate().
+ */
+function rt_teenus_node_validate($node, $form, &$form_state) {
+  if ($node->type == 'teenus') {
+    drupal_add_css('.group-t-statistika {display:none;}', array('type' => 'inline'));
+    // Allow saving services with same ID if they are translations.
+    if (!isset($form['#node']->translation_source)) {
+      // Allows to save with same id when it's a translation of a node.
+      if (!(isset($node->tnid) && $node->tnid !== 0)) {
+        /*
+         * Check if this combination of prefix and id was already used.
+         */
+        $query = db_select('node', 'n');
+        $query->join('field_data_field_t_teenuse_prefix', 'p', 'p.entity_id = n.nid');
+        $query->join('field_data_field_t_tunnus', 'i', 'i.entity_id = n.nid');
+        $query->fields('i', array('field_t_tunnus_value'));
+        $query->condition('n.type', 'teenus');
+        $query->condition('p.field_t_teenuse_prefix_value', $form_state['values']['field_t_teenuse_prefix'][LANGUAGE_NONE][0]['value']);
+        $query->condition('i.field_t_tunnus_value', $form_state['values']['field_t_tunnus'][LANGUAGE_NONE][0]['value']);
+        if (!is_null($node->nid)) {
+          $query->condition('p.entity_id', $node->nid, '!=');
+          $query->condition('i.entity_id', $node->nid, '!=');
+        }
+        if ($query->execute()->fetchField()) {
+          form_set_error(
+            'field_t_tunnus',
+            t('Service with the id "@id" already exist.',
+              array(
+                '@id' => $form_state['values']['field_t_teenuse_prefix'][LANGUAGE_NONE][0]['value']
+                . '_' . $form_state['values']['field_t_tunnus'][LANGUAGE_NONE][0]['value'],
+              )
+            )
+          );
+        }
+      }
+    }
+
+    /*
+     * At least one "Viide teenusele" URL should be set If at least one channel
+     * static is entered.
+     */
+    $channel_measured = FALSE;
+    $service_url_entered = FALSE;
+    foreach ($form_state['values']['field_c_mootmise_aasta'][LANGUAGE_NONE] as $measured_year) {
+      if (!is_array($measured_year)) {
+        continue;
+      }
+
+      foreach ($measured_year['field_fcf_mootmise_kanal'][LANGUAGE_NONE] as $measured_channel) {
+        if (is_array($measured_channel) && !is_null($measured_channel['field_fcf_kanal'][LANGUAGE_NONE][0]['tid'])) {
+          $channel_measured = TRUE;
+          $service_url_entered = !empty($measured_channel['field_fcf_viide_teenusele'][LANGUAGE_NONE][0]['url']);
+
+          // Validate number values.
+          $fields = array(
+            'field_fcf_osutamiste_arv',
+            'field_fcf_aasta_rahulolu',
+            'field_fcf_aasta_halduskulu',
+            'field_fcf_ajakulu_klientidele',
+          );
+          foreach ($fields as $validate_field) {
+            if (!empty($measured_channel[$validate_field][LANGUAGE_NONE][0]['value'])
+              && !is_numeric($measured_channel[$validate_field][LANGUAGE_NONE][0]['value'])
+            ) {
+              form_set_error(
+                $validate_field,
+                t('Invalid value: "@value", used for the field: "@field"',
+                  array(
+                    '@value' => $measured_channel[$validate_field][LANGUAGE_NONE][0]['value'],
+                    '@field' => $validate_field,
+                  )
+                )
+              );
+            }
+          }
+        }
+      }
+    }
+    if ($channel_measured && !$service_url_entered) {
+      form_set_error('field_c_mootmise_aasta', t('Please insert at least one reference URL to the service!'));
+    }
+
+    /*
+     * Custom error for Regulatsioon field. Default error text is not
+     * informative enough.
+     */
+    if (empty($form_state['values']['field_t_regulatsioon'][LANGUAGE_NONE][0]['url'])) {
+      form_set_error('field_t_regulatsioon', t('Please insert a reference to the regulation.'));
+    }
+
+    /*
+     * Validation of Phone field. Only numbers allowed.
+     */
+    if (!empty($form_state['values']['field_t_vastutaja_telefon'][LANGUAGE_NONE][0]['value'])
+      && !preg_match('/^([0-9\(\)\/\+ \-]*)$/', $form_state['values']['field_t_vastutaja_telefon'][LANGUAGE_NONE][0]['value'])
+    ) {
+      form_set_error('field_t_vastutaja_telefon', t('Only numeric values are allowed to the telephone filed.'));
+    }
+  }
+}
+
+/**
+ * Implements hook_node_prepare().
+ */
+function rt_teenus_node_prepare($node) {
+  if ($node->type == 'teenus') {
+    // Assign term reference value to the Allasutuse reference field if
+    // correct institution term value was selected.
+    if (isset($node->field_t_allasutus_private)) {
+      if ($selected_institution_term = taxonomy_get_term_by_name($node->field_t_allasutus_private[LANGUAGE_NONE][0]['value'], 'valitsuse_puu')) {
+        $node->field_t_allasutuse_reference[LANGUAGE_NONE][0]['tid']
+          = key($selected_institution_term);
+      }
+      else {
+        drupal_set_message(t('Unable to load selected institution term: @term', array('@term' => $node->field_t_allasutus_private[LANGUAGE_NONE][0]['value'])), 'error');
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_node_presave().
+ */
+function rt_teenus_node_presave($node) {
+  if ($node->type == 'teenus') {
+    global $user;
+    $node->title = trim($node->title);
+    $node_author_user = user_load($node->uid);
+    /*
+     * Assign term reference value to the Allasutuse reference field if correct
+     * institution term value was selected.
+     */
+    if (array_search(ROLE_VALITSUS, $node_author_user->roles)) {
+      if ($institution_term = taxonomy_term_load($node->field_t_allasutuse_reference[LANGUAGE_NONE][0]['tid'])) {
+        $ministry_term_tid = taxonomy_get_parents($institution_term->tid);
+        if (!empty($ministry_term_tid)) {
+          $ministry_term_tid = array_values($ministry_term_tid);
+          $ministry_term = $ministry_term_tid[0];
+
+          $node->field_t_ministeerium_private[LANGUAGE_NONE][0]['value'] = $ministry_term->name;
+          $node->field_t_allasutus_private[LANGUAGE_NONE][0]['value'] = $institution_term->name;
+        }
+        else {
+          drupal_set_message(t('Subdivisions term is missing a parent term: @term', array('@term' => $institution_term->name)), 'error');
+        }
+      }
+      else {
+        drupal_set_message(t('Service subdivision reference is missing: @node', array('@node' => $node->title)), 'error');
+      }
+    }
+    // 'Ministeeriumi administraator' and 'Allasutuse administraator' role
+    // users.
+    else {
+      if ($institution_term = taxonomy_get_term_by_name($node->field_t_allasutus_private[LANGUAGE_NONE][0]['value'], 'valitsuse_puu')) {
+        $node->field_t_allasutuse_reference[LANGUAGE_NONE][0]['tid'] = key($institution_term);
+      }
+      else {
+        drupal_set_message(t('Service "private" subdivision is missing: @node', array('@node' => $node->title)), 'error');
+      }
+    }
+
+    /*
+     * Un-publish node if status is 'Loomisel'
+     */
+    $service_status = field_get_items('node', $node, 'field_t_teenuse_seisund');
+    $node->status = $service_status[0]['value'] == 'Loomisel' ? 0 : 1;
+
+    // Unpublish nodes of ROLE_ALLASUTUS and ROLE_MINISTEERIUM users.
+    if ((array_search(ROLE_MINISTEERIUM, $node_author_user->roles) || array_search(ROLE_ALLASUTUS, $node_author_user->roles)) && !array_search(ROLE_VALITSUS, $user->roles)) {
+      $node->status = 0;
+    }
+  }
+
+}
+
+/**
+ * Implements hook_node_insert().
+ */
+function rt_teenus_node_insert($node) {
+  if ($node->type == 'teenus') {
+    global $user;
+
+    if (array_search(ROLE_ALLASUTUS, $user->roles) || array_search(ROLE_MINISTEERIUM, $user->roles)) {
+      $query = new EntityFieldQuery();
+      $query->entityCondition('entity_type', 'user')
+        ->fieldCondition('field_u_teenuste_haldaja', 'value', 1, '=');
+      $result = $query->execute();
+
+      if (isset($result['user']) && is_array($result['user'])) {
+        $uids_to_mail = array_keys($result['user']);
+        $service_users = user_load_multiple($uids_to_mail);
+        foreach ($service_users as $s_user) {
+          drupal_mail('rt_teenus', 'new_allsututs_service', $s_user->mail, 'et', array('nid' => $node->nid), 'info@riigiteenused.ee');
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_mail().
+ */
+function rt_teenus_mail($key, &$message, $params) {
+  // Allsututse admin added new service.
+  if ($key == 'new_allsututs_service') {
+    $node = node_load($params['nid']);
+    $author = user_load($node->uid);
+
+    $message['subject'] = sprintf(
+      'Kasutaja %s lisas uue teenuse "%s".',
+      format_username($author),
+      $node->title
+    );
+    $message['body'][] = sprintf(
+      "Teenuse nimetus: %s <br/>
+        Loomise kp: %s <br/>
+        Looja nimi: %s <br/>
+        Ministeerium ja allasutus: %s <br/>
+        Url: %s
+      ",
+      $node->title,
+      date('d-m-Y', $node->created),
+      format_username($author),
+      $node->field_t_ministeerium_private[LANGUAGE_NONE][0]['safe_value'] . ' / ' . $node->field_t_allasutus_private[LANGUAGE_NONE][0]['safe_value'],
+      variable_get('teenus_service_application_url', '') . '/node/' . $node->nid . '/edit'
+    );
+  }
+}
+
+/*
+ * Ajax callback functions.
+ */
+
+/**
+ * Callback function for selected institution.
+ *
+ * Will generate unique service id: prefix + id.
+ *
+ * @param array $form
+ *   Form array.
+ * @param array $form_state
+ *   Form state array.
+ *
+ * @return array
+ *   form array
+ */
+function _rt_teenus_institution_selected_callback($form, $form_state) {
+  return $form;
+}
+
+
+/**
+ * Update ministry division term.
+ *
+ * Function to be fired upon changes to the government taxonomy tree structure.
+ * On form save, gather all the nodes connected to the Ministry and institution,
+ * and update the Teenuse node fields accordingly.
+ *
+ * @param array $form
+ *   Form array.
+ * @param array $form_state
+ *   Form state array.
+ */
+function rt_teenus_update_ministry_division_term($form, &$form_state) {
+  foreach ($form_state['input'] as $updated_term) {
+    if (is_array($updated_term)) {
+      $nodes_to_update = array();
+      // Chech if this term have child terms. Term in ministry term if sub-terms
+      // found.
+      $child_tems = taxonomy_get_children($updated_term['tid']);
+
+      // Update particular institution term nodes.
+      if (empty($child_tems)) {
+        $nodes_to_update = array_merge($nodes_to_update, rt_teenus_nids_by_tid($updated_term['tid']));
+        // Nodeid's, to update ministry and institution
+        // update nodes, set private ministry = $parent - query
+        // update nodes, set private institution = updated term - query.
+        if (!empty($nodes_to_update)) {
+
+          $ministrys = taxonomy_get_parents($updated_term['tid']);
+          $ministrys_name = array_shift($ministrys)->name;
+          $query_ministry = db_update('field_data_field_t_ministeerium_private')
+            ->fields(array('field_t_ministeerium_private_value' => $ministrys_name))
+            ->condition('entity_id', $nodes_to_update, 'IN');
+
+          $query_ministry_ref = db_update('field_revision_field_t_ministeerium_private')
+            ->fields(array('field_t_ministeerium_private_value' => $ministrys_name))
+            ->condition('entity_id', $nodes_to_update, 'IN');
+
+          if (!empty($nodes_to_update)) {
+            $query_ministry->execute();
+            $query_ministry_ref->execute();
+          }
+
+          $query_institution = db_update('field_data_field_t_allasutus_private')
+            ->fields(array('field_t_allasutus_private_value' => taxonomy_term_load($updated_term['tid'])->name))
+            ->condition('entity_id', $nodes_to_update, 'IN');
+
+          $query_institution_ref = db_update('field_revision_field_t_allasutus_private')
+            ->fields(array('field_t_allasutus_private_value' => taxonomy_term_load($updated_term['tid'])->name))
+            ->condition('entity_id', $nodes_to_update, 'IN');
+
+          if (!empty($nodes_to_update)) {
+            $query_institution->execute();
+            $query_institution_ref->execute();
+          }
+        }
+      }
+      // Update all ministry institution terms' nodes.
+      else {
+
+        $ministry_term = taxonomy_term_load($updated_term['tid']);
+        $nodes_to_update = array_merge($nodes_to_update, rt_teenus_nids_by_tid($ministry_term->tid));
+
+        $ministry_sub_institutions = taxonomy_get_children($ministry_term->tid);
+        foreach ($ministry_sub_institutions as $institution) {
+          $nodes_to_update = array_merge($nodes_to_update, rt_teenus_nids_by_tid($institution->tid));
+        }
+        $query_ministry = db_update('field_data_field_t_ministeerium_private')
+          ->fields(array('field_t_ministeerium_private_value' => $ministry_term->name))
+          ->condition('entity_id', $nodes_to_update, 'IN');
+
+        $query_ministry_ref = db_update('field_revision_field_t_ministeerium_private')
+          ->fields(array('field_t_ministeerium_private_value' => $ministry_term->name))
+          ->condition('entity_id', $nodes_to_update, 'IN');
+
+        if (!empty($nodes_to_update)) {
+          $query_ministry->execute();
+          $query_ministry_ref->execute();
+        }
+      }
+
+    }
+  }
+  $cache_tables = array('cache_entity_node', 'cache_field', 'cache_page');
+  foreach ($cache_tables as $table) {
+    cache_clear_all('*', $table, TRUE);
+  }
+}
+
+
+/**
+ * Redirects user based on role.
+ */
+function _rt_teenus_user_redirect() {
+  global $user;
+
+  if (is_array($user->roles) && in_array(ROLE_VALITSUS, array_values($user->roles))) {
+    drupal_goto('statistika/valitsus');
+  }
+  elseif (is_array($user->roles) && in_array(ROLE_MINISTEERIUM, array_values($user->roles))) {
+    drupal_goto('statistika/ministeerium');
+  }
+  elseif (is_array($user->roles) && in_array(ROLE_ALLASUTUS, array_values($user->roles))) {
+    drupal_goto('statistika/allasutus');
+  }
+  else {
+    drupal_goto('user');
+  }
+}
+
+/*
+ * Utility functions.
+ */
+
+/**
+ * Get sub institution prefix.
+ *
+ * Generates array with prefix and id of future service. This combination should
+ * be unique.
+ *
+ * Prefix is defined on the sub institution's taxonomy term. Information about
+ * which sub institution is requested from the current user's account.
+ *
+ * @param null|string $prefix
+ *   If we already have prefix predefined and only need to get next id.
+ *
+ * @return bool|array
+ *   return array with free service's prefix and id combination or FALSE if
+ *   user's don't have sub institution defined.
+ */
+function _rt_teenus_get_service_id($prefix = NULL) {
+  global $user;
+
+  $service_id_set = FALSE;
+  $user_data = user_load($user->uid);
+  $sub_institution = field_get_items('user', $user_data, 'field_u_asutus');
+
+  if (isset($sub_institution[0]['tid']) && !empty($sub_institution[0]['tid']) || !is_null($prefix)) {
+    $institution_term = taxonomy_term_load($sub_institution[0]['tid']);
+    $prefix_field
+      = $institution_term ? field_get_items('taxonomy_term', $institution_term, 'field_allasutuse_prefix') : NULL;
+    $prefix_value
+      = is_null($prefix) ? (!empty($prefix_field[0]['value']) ? $prefix_field[0]['value'] : NULL) : $prefix;
+    if (!is_null($prefix_value)) {
+      $service_id_set['prefix'] = $prefix_value;
+      $query = db_select('field_data_field_t_tunnus', 't');
+      $query->join('field_data_field_t_teenuse_prefix', 'p', 'p.entity_id = t.entity_id');
+      $query->addExpression('MAX(field_t_tunnus_value)');
+      $query->condition('p.field_t_teenuse_prefix_value', is_null($prefix) ? $service_id_set['prefix'] : $prefix);
+      $max_id = $query->execute()->fetchField();
+      // ID is a string '001' format in database, so when we incrementing it
+      // by 1 it became a number '2', so wee need to add leading zeros with
+      // sprintf().
+      $service_id_set['id'] = is_null($max_id) ? '001' : sprintf('%03d', $max_id + 1);
+    }
+    else {
+      if (isset($institution_term->tid) && taxonomy_get_parents($institution_term->tid)) {
+        drupal_set_message(t('The subdivision is missing a prefix: @term', array('@term' => $institution_term->name)), 'error');
+      }
+    }
+  }
+  else {
+    if (!array_search(ROLE_VALITSUS, $user->roles)) {
+      drupal_set_message(t("User doesn't belong to any institution: @user. Please define service prefix and id.", array('@user' => $user->name)), 'error');
+    }
+  }
+
+  return $service_id_set;
+}
+
+
+
+/**
+ * Print with pre.
+ *
+ * @param string $out
+ *   Output string.
+ */
+function print_pre($out) {
+  print '<pre>';
+  print_r($out);
+  print '</pre>';
+}
+
+/**
+ * Get array of node id's who are connected to a given term.
+ *
+ * @param int $tid
+ *   Term id.
+ *
+ * @return array
+ *   array if nids.
+ */
+function rt_teenus_nids_by_tid($tid) {
+  if (isset($tid) && is_numeric($tid)) {
+    $nids = array();
+    $query = db_select('field_data_field_t_allasutuse_reference', 'ar')
+      ->fields('ar', array('entity_id'))
+      ->condition('field_t_allasutuse_reference_tid', $tid, '=');
+    $result = $query->execute();
+    foreach ($result as $asi) {
+      $nids[] = $asi->entity_id;
+    }
+    return $nids;
+  }
+  return array();
+}

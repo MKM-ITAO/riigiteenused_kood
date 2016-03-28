@@ -1,0 +1,16 @@
+<?php
+/**
+ * @file
+ * Code for the Services search feature.
+ */
+
+include_once 'services_search.features.inc';
+
+/**
+ * Implements hook_views_post_build().
+ */
+function services_search_views_post_build(&$view) {
+  if ($view->name == 'teenuste_otsing' && $view->current_display == 'teenuste_otsing_page') {
+    drupal_add_js(drupal_get_path('module', 'services_search') . '/js/search_functions.js', array('scope' => 'footer', 'weight' => 1));
+  }
+}

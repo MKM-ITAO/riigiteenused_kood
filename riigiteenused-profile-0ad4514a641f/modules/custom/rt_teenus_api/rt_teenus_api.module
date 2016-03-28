@@ -1,0 +1,328 @@
+<?php
+/**
+ * @file
+ * Module implements API for exporting services in JSON format.
+ *
+ * There is a 3 types of API:
+ * - Private.
+ *   Implemented to synchronize services and taxonomies from VP application.
+ *   Have a number of params see @rt_teenus_api_menu()
+ *   and @_rt_teenus_get_all_teenused().
+ * - Public.
+ *   Public API is represented by 2 URL for all services and for particular
+ *   ministries or sub-institutions services.
+ * - Single.
+ *   Requested by UUID a.k.a. objectId param in JSON.
+ */
+
+/**
+ * URL key describing public API.
+ */
+define('RT_TEENUS_API_PUBLIC', 'all');
+
+/**
+ * URL key describing single service API.
+ */
+define('RT_TEENUS_API_SINGLE', 'single');
+
+/**
+ * URL key describing private API.
+ */
+define('RT_TEENUS_API_PRIVATE', 'private');
+
+/**
+ * Implements hook_menu().
+ */
+function rt_teenus_api_menu() {
+  $items['api'] = array(
+    'title' => 'Teenuste API',
+    'page callback' => '_rt_teenus_get_all_teenused',
+    'access arguments' => array('access content'),
+  );
+
+  $items['export/terms'] = array(
+    'title' => 'Termide eksport',
+    'page callback' => '_rt_teenus_get_terms',
+    'access arguments' => array('access content'),
+  );
+
+  return $items;
+}
+
+/**
+ * Outputs JSON array of taxonomies and terms.
+ */
+function _rt_teenus_get_terms() {
+  $vocabularies = taxonomy_get_vocabularies();
+  $taxonomies = array();
+
+  foreach ($vocabularies as $vid => $voc_data) {
+    $terms_list = array();
+
+    foreach (taxonomy_get_tree($voc_data->vid) as $term_object) {
+      $rl_term_object = taxonomy_term_load($term_object->tid);
+
+      if (isset($rl_term_object->name_field)) {
+        $object_name_field = $rl_term_object->name_field;
+        foreach (language_list() as $language_code) {
+          if (array_key_exists($language_code->language, $object_name_field)) {
+            $term_object->other_lang[$language_code->language] = $rl_term_object->name_field[$language_code->language][0]['value'];
+          }
+        }
+      }
+
+      $terms_list[$term_object->tid] = $term_object;
+    }
+    $taxonomies[$voc_data->machine_name] = $terms_list;
+  }
+
+  _print_json_response($taxonomies);
+}
+
+/**
+ * Outputs JSON array of services or service detailed data.
+ *
+ * Returns services depending on passed parameters. $api_section - first
+ * parameter describing what section of API is requested: all (public), single
+ * (public) or private.
+ *
+ * Language is a first API argument and it should be defined for every request.
+ * Services will be returned for the passed language only for public API. All
+ * services (in all languages) will be returned for private API even if case
+ * language is passed, this is done for basic parameters validation.
+ *
+ * @param string $language
+ *   language of services to be returned. language parameter is only
+ *   mandatory (value will be validated) for public API. define some default
+ *   language (ex. 'et') for private API.
+ * @param string $api_section
+ *   type of requested api: 'all', 'single', 'private' or empty for default 'all'.
+ * @param null $request_argument
+ *   system UUID (in case of public single service API request) or
+ *   ministry / institution name (in case of private or public API request).
+ */
+function _rt_teenus_get_all_teenused($language, $api_section = 'all', $request_argument = NULL) {
+  $return_all_languages = $language === 'all';
+  if (!in_array($api_section, array(RT_TEENUS_API_PRIVATE, RT_TEENUS_API_PUBLIC, RT_TEENUS_API_SINGLE))) {
+    _print_json_response(array('error' => 'Undefined API request!'));
+  }
+  elseif (!array_key_exists($language, language_list()) && !$return_all_languages) {
+    _print_json_response(array('error' => 'Invalid language passed!'));
+  }
+  else {
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'teenus')
+      ->fieldCondition('field_t_teenuse_seisund', 'value', array('Arhiveeritud', 'Loomisel'), 'NOT IN')
+      ->propertyCondition('status', NODE_PUBLISHED);
+
+    if ($api_section == RT_TEENUS_API_PRIVATE) {
+      $requested_institution_tids = array();
+      if ($request_institution_term = taxonomy_get_term_by_name($request_argument, 'valitsuse_puu')) {
+        $request_institution_term = $request_institution_term[key($request_institution_term)];
+        $requested_institution_tids
+            = array_merge($requested_institution_tids, _get_institution_term_ids($request_institution_term->name));
+
+        $languages = language_list();
+        unset($languages[$request_institution_term->language]);
+        foreach ($languages as $lang_code => $lang_object) {
+          if ($translation_set_component = i18n_taxonomy_term_get_translation($request_institution_term, $lang_code)) {
+            $requested_institution_tids
+                = array_merge($requested_institution_tids, _get_institution_term_ids($translation_set_component->name));
+          }
+        }
+      }
+      // $requested_institution_tids = _get_institution_term_ids($request_argument);
+      if (!empty($requested_institution_tids)) {
+        $query->fieldCondition('field_t_allasutuse_reference', 'tid', $requested_institution_tids, 'IN');
+      }
+    }
+    // 'All' or particular service requests or default action.
+    elseif ($api_section == RT_TEENUS_API_PUBLIC) {
+      $requested_institution_tids = _get_institution_term_ids($request_argument);
+
+      if (!empty($requested_institution_tids)) {
+        $query->fieldCondition('field_t_allasutuse_reference', 'tid', $requested_institution_tids, 'IN');
+      }
+
+      if (!$return_all_languages) {
+        $query->propertyCondition('language', $language);
+      }
+    }
+    elseif ($api_section == RT_TEENUS_API_SINGLE) {
+      if (!is_null($request_argument)) {
+        $query->propertyCondition('uuid', $request_argument, '=');
+      }
+    }
+
+    $query->propertyOrderBy('created', 'DESC');
+    // Run query as admin to get all services bypassing access restrictions.
+    $query->addMetaData('account', user_load(1));
+    $result = $query->execute();
+    $teenuste_array = array();
+    if (isset($result)) {
+      foreach ($result as $teenused) {
+        foreach ($teenused as $teenus) {
+          $node = node_load($teenus->nid);
+          // Ühe teenuse json objecti struktuur.
+          $teenuse_array = array(
+            "createdAt" => date('d-m-Y', $node->created),
+            "objectId" => $node->uuid,
+            "updatedAt" => date('d-m-Y', $node->changed),
+            "keel" => $node->language,
+            // Teenuse üldandmed.
+            "nimetus" => $node->title,
+            "published" => $node->status,
+            "eluarisyndmus" => isset($node->field_t_syndmus[LANGUAGE_NONE][0]['value']) ? $node->field_t_syndmus[LANGUAGE_NONE][0]['value'] : '',
+            "identifikaator" => $node->field_t_teenuse_prefix[LANGUAGE_NONE][0]['value'] . '-' . $node->field_t_tunnus[LANGUAGE_NONE][0]['value'],
+            "kirjeldus" => $node->field_t_kirjeldus[LANGUAGE_NONE][0]['value'],
+            "tegevusvaldkond" => isset(taxonomy_term_load($node->field_t_tegevusvaldkond[LANGUAGE_NONE][0]['tid'])->name) ? taxonomy_term_load($node->field_t_tegevusvaldkond[LANGUAGE_NONE][0]['tid'])->name : '',
+            "teenusetyyp" => isset(taxonomy_term_load($node->field_t_teenuse_tyyp[LANGUAGE_NONE][0]['tid'])->name) ? taxonomy_term_load($node->field_t_teenuse_tyyp[LANGUAGE_NONE][0]['tid'])->name : '',
+            // Teenuse osutaja.
+            "ministeerium" => isset($node->field_t_ministeerium_private[LANGUAGE_NONE][0]['value']) ? $node->field_t_ministeerium_private[LANGUAGE_NONE][0]['value'] : '',
+            "allasutus" => isset($node->field_t_allasutus_private[LANGUAGE_NONE][0]['value']) ? $node->field_t_allasutus_private[LANGUAGE_NONE][0]['value'] : '',
+            "osakondyksus" => isset($node->field_t_osakond_yksus[LANGUAGE_NONE][0]['value']) ? $node->field_t_osakond_yksus[LANGUAGE_NONE][0]['value'] : '',
+            // Teenuse vastutaja.
+            "omanikunimi" => isset($node->field_t_vastutaja_nimi[LANGUAGE_NONE][0]['value']) ? $node->field_t_vastutaja_nimi[LANGUAGE_NONE][0]['value'] : '',
+            "omanikuamet" => isset($node->field_t_vastutaja_ametinimetus[LANGUAGE_NONE][0]['value']) ? $node->field_t_vastutaja_ametinimetus[LANGUAGE_NONE][0]['value'] : '',
+            "omanikutelefon" => isset($node->field_t_vastutaja_telefon[LANGUAGE_NONE][0]['value']) ? $node->field_t_vastutaja_telefon[LANGUAGE_NONE][0]['value'] : '',
+            "omanikuemail" => isset($node->field_t_vastutaja_email[LANGUAGE_NONE][0]['email']) ? $node->field_t_vastutaja_email[LANGUAGE_NONE][0]['email'] : '',
+            // Teenuse kanalid ja mõõdikud.
+            "teenuste_kanalid_ja_moodikud" => _get_teenuste_kanalid_ja_moodikud_by_field_collection_ids($node->field_c_mootmise_aasta),
+            // Lisainfo.
+            /*"makse" => isset($node->field_t_makse[LANGUAGE_NONE][0]['value']) ? $node->field_t_makse[LANGUAGE_NONE][0]['value'] : '',*/
+            "konfinfo" => isset($node->field_t_konfidentsiaalne_info[LANGUAGE_NONE][0]['value']) ? $node->field_t_konfidentsiaalne_info[LANGUAGE_NONE][0]['value'] : '',
+            "eeltingimus" => isset($node->field_t_eeltingimused[LANGUAGE_NONE][0]['value']) ? $node->field_t_eeltingimused[LANGUAGE_NONE][0]['value'] : '',
+            "jareltingimus" => isset($node->field_t_jareltingimused[LANGUAGE_NONE][0]['value']) ? $node->field_t_jareltingimused[LANGUAGE_NONE][0]['value'] : '',
+            "seotuddokumendid" => isset($node->field_t_seotud_dokumendid[LANGUAGE_NONE][0]['value']) ? $node->field_t_seotud_dokumendid[LANGUAGE_NONE][0]['value'] : '',
+            /*"seisund" => isset($node->field_t_teenuse_seisund[LANGUAGE_NONE][0]['value']) ? $node->field_t_teenuse_seisund[LANGUAGE_NONE][0]['value'] : '',*/
+            "muudatustvajav" => isset($node->field_t_muudatus_vajav[LANGUAGE_NONE][0]['value']) ? $node->field_t_muudatus_vajav[LANGUAGE_NONE][0]['value'] : '',
+            "aegumisekpv" => isset($node->field_t_teenuse_aegumise_kp[LANGUAGE_NONE][0]['value']) ? $node->field_t_teenuse_aegumise_kp[LANGUAGE_NONE][0]['value'] : '',
+            "funktsioon" => isset($node->field_t_funktsioon[LANGUAGE_NONE][0]['value']) ? $node->field_t_funktsioon[LANGUAGE_NONE][0]['value'] : '',
+            "veebiaadress" => _teenus_get_most_important_channel_link($node),
+          );
+
+          //"makse" => isset($node->field_t_makse[LANGUAGE_NONE][0]['value']) ? $node->field_t_makse[LANGUAGE_NONE][0]['value'] : '',
+          $makse = field_get_items('node',$node,'field_t_makse');
+          $teenuse_array["makse"] = $makse[0]['value'];
+
+          //"seisund" => isset($node->field_t_teenuse_seisund[LANGUAGE_NONE][0]['value']) ? $node->field_t_teenuse_seisund[LANGUAGE_NONE][0]['value'] : '',
+          $seisund = field_get_items('node',$node,'field_t_teenuse_seisund');
+          $teenuse_array["seisund"] = $seisund[0]['value'];
+          if (count(field_get_items('node',$node,'field_t_sihtgrupp') > 0)) {
+            foreach (field_get_items('node',$node,'field_t_sihtgrupp') as $sihtgruppp) {
+              $teenuse_array['sihtgrupp'][] = $sihtgruppp['value'];
+            }
+          }
+
+
+          foreach ($node->field_t_regulatsioon[LANGUAGE_NONE] as $regulatsioon) {
+            $teenuse_array['regulatsioon'][] = $regulatsioon['url'];
+
+          }
+          // Them private_api fields.
+          if ($api_section == RT_TEENUS_API_PRIVATE) {
+            // Statistika.
+            $teenuse_array['osutatud_teenuste_arv'] = isset($node->field_t_osutatud_teenuste_arv[LANGUAGE_NONE][0]['value']) ? $node->field_t_osutatud_teenuste_arv[LANGUAGE_NONE][0]['value'] : '';
+            $teenuse_array['rahulolu'] = isset($node->field_t_rahulolu[LANGUAGE_NONE][0]['value']) ? $node->field_t_rahulolu[LANGUAGE_NONE][0]['value'] : '';
+            $teenuse_array['maksumus'] = isset($node->field_t_maksumus[LANGUAGE_NONE][0]['value']) ? $node->field_t_maksumus[LANGUAGE_NONE][0]['value'] : '';
+            $teenuse_array['kliendihaldus_koormus'] = isset($node->field_t_kliendihaldus_koormus[LANGUAGE_NONE][0]['value']) ? $node->field_t_kliendihaldus_koormus[LANGUAGE_NONE][0]['value'] : '';
+
+            // Lisa info kastid.
+            $teenuse_array['lisainfo'] = isset($node->field_t_lisainfo[LANGUAGE_NONE][0]['value']) ? $node->field_t_lisainfo[LANGUAGE_NONE][0]['value'] : '';
+            $teenuse_array['lisainfo_osutaja'] = isset($node->field_t_lisainfo_osutaja[LANGUAGE_NONE][0]['value']) ? $node->field_t_lisainfo_osutaja[LANGUAGE_NONE][0]['value'] : '';
+            $teenuse_array['lisainfo_uldandmed'] = isset($node->field_t_lisainfo_uldandmed[LANGUAGE_NONE][0]['value']) ? $node->field_t_lisainfo_uldandmed[LANGUAGE_NONE][0]['value'] : '';
+            $teenuse_array['lisainfo_vastutaja'] = isset($node->field_field_t_lisainfo_vastutaja[LANGUAGE_NONE][0]['value']) ? $node->field_field_t_lisainfo_vastutaja[LANGUAGE_NONE][0]['value'] : '';
+            $teenuse_array['mootmismetoodika'] = isset($node->field_t_mootmismetoodika[LANGUAGE_NONE][0]['value']) ? $node->field_t_mootmismetoodika[LANGUAGE_NONE][0]['value'] : '';
+          }
+          $teenuste_array[] = $teenuse_array;
+        }
+      }
+
+      _print_json_response($teenuste_array);
+    }
+  }
+}
+
+/**
+ * Outputs JSON response depending on user browser.
+ *
+ * @param array $response_data
+ *   array for json response.
+ */
+function _print_json_response ($response_data) {
+  // Internet explorer.
+  if(preg_match('/MSIE ([0-9]{1,}[\.0-9]{0,})/',$_SERVER['HTTP_USER_AGENT'])
+    || preg_match('/Trident/',$_SERVER['HTTP_USER_AGENT'])
+  ) {
+    header('Content-Type: text/plain');
+    print drupal_json_encode($response_data);
+  }
+  // Correct browsers.
+  else {
+    print drupal_json_output($response_data);
+  }
+}
+
+/**
+ * Get measured channels data as associated array.
+ *
+ * @param array $fc_ids
+ *   field collection id's
+ *
+ * @return array
+ *   measured channels data
+ */
+function _get_teenuste_kanalid_ja_moodikud_by_field_collection_ids ($fc_ids) {
+  $result = array();
+  if (isset($fc_ids[LANGUAGE_NONE]) && is_array($fc_ids[LANGUAGE_NONE])) {
+    foreach ($fc_ids[LANGUAGE_NONE] as $f_block) {
+      if ($year_fc = field_collection_item_load($f_block['value'])) {
+        $year_term = isset($year_fc->field_fcf_mootmise_aasta[LANGUAGE_NONE]) ? taxonomy_term_load($year_fc->field_fcf_mootmise_aasta[LANGUAGE_NONE][0]['tid']) : FALSE;
+        $year_value = $year_term ? $year_term->name : 'empty';
+
+        foreach ($year_fc->field_fcf_mootmise_kanal[LANGUAGE_NONE] as $fc_channel) {
+          $fc_channel_o = field_collection_item_load($fc_channel['value']);
+          $channel_term = isset($fc_channel_o->field_fcf_kanal[LANGUAGE_NONE]) ? taxonomy_term_load($fc_channel_o->field_fcf_kanal[LANGUAGE_NONE][0]['tid']) : FALSE;
+          $channel_name = $channel_term ? $channel_term->name : 'empty';
+          $result[$year_value][$channel_name] = array(
+            'link' => isset($fc_channel_o->field_fcf_viide_teenusele[LANGUAGE_NONE]) ? $fc_channel_o->field_fcf_viide_teenusele[LANGUAGE_NONE][0]['url'] : '',
+            'osutamistearv' => isset($fc_channel_o->field_fcf_osutamiste_arv[LANGUAGE_NONE]) ? $fc_channel_o->field_fcf_osutamiste_arv[LANGUAGE_NONE][0]['value'] : '',
+            'rahulolu' => isset($fc_channel_o->field_fcf_aasta_rahulolu[LANGUAGE_NONE]) ? $fc_channel_o->field_fcf_aasta_rahulolu[LANGUAGE_NONE][0]['value'] : '',
+            'halduskulu' => isset($fc_channel_o->field_fcf_aasta_halduskulu[LANGUAGE_NONE]) ? $fc_channel_o->field_fcf_aasta_halduskulu[LANGUAGE_NONE][0]['value'] : '',
+            'ajakulu' => isset($fc_channel_o->field_fcf_ajakulu_klientidele[LANGUAGE_NONE]) ? $fc_channel_o->field_fcf_ajakulu_klientidele[LANGUAGE_NONE][0]['value'] : '',
+          );
+        }
+      }
+    }
+  }
+  return $result;
+}
+
+/**
+ * Get all passed term related tids.
+ *
+ * Also all children terms tids will be returned.
+ *
+ * @param string $institution_name
+ *   institution term name.
+ *
+ * @return array
+ *   array of tids (passed term's tid and children terms tids).
+ */
+function _get_institution_term_ids ($institution_name) {
+  $requested_institution_tids = array();
+
+  if ($institution_term = taxonomy_get_term_by_name($institution_name, 'valitsuse_puu')) {
+    $request_institution_tid = key($institution_term);
+    $requested_institution_tids = array();
+    if (taxonomy_get_parents($request_institution_tid) === array() && taxonomy_term_load($request_institution_tid)) {
+      $requested_institution_tids = array_keys(taxonomy_get_children($request_institution_tid));
+    }
+    else {
+      $requested_institution_tids[] = $request_institution_tid;
+    }
+  }
+
+  return $requested_institution_tids;
+}

@@ -1,0 +1,23 @@
+
+
+
+@if $layout == global {
+  .view-newsletters {
+    table {
+      @extend %table-reset;
+      @extend %extendable-table;
+
+      caption {
+        font-weight: bold;
+      }
+
+      table {
+        margin-bottom: 20px;
+      }
+
+      .views-field-created {
+        width: 50px;
+      }
+    }
+  }
+}

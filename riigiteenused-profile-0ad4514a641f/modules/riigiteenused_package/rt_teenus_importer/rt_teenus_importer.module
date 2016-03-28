@@ -1,0 +1,139 @@
+<?php
+/**
+ * @file
+ * Importer of services and terms from Riigiteenused API.
+ */
+
+/**
+ * Term name.
+ */
+define('RT_TEENUS_IMPORTER_API_INSTITUTION_REQUEST_ARGUMENT', variable_get('teenus_service_institution_name', ''));
+/**
+ * Full API URL.
+ */
+define('RT_TEENUS_IMPORTERNODES_API_URI', 'api/et/private/' . urlencode(RT_TEENUS_IMPORTER_API_INSTITUTION_REQUEST_ARGUMENT));
+/**
+ * Full API URL.
+ */
+define('RT_TEENUS_IMPORTERTERMS_API_URI', 'export/terms');
+
+/**
+ * Implements hook_menu().
+ */
+function rt_teenus_importer_menu() {
+  $items['importer/teenused'] = array(
+    'title' => 'Teenuse Importer',
+    'description' => 'A form to mess around with.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('rt_teenus_importer_form'),
+    'access arguments' => array('Access administration menu'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+
+/**
+ * Form for running import from API.
+ *
+ * @param array $form
+ *   Form array.
+ * @param array $form_state
+ *   Form state array.
+ *
+ * @return array
+ *   form with new elements
+ */
+function rt_teenus_importer_form($form, &$form_state) {
+  $form['nodes_api_url'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Teenuste API url',
+    '#size' => 60,
+    '#required' => TRUE,
+    '#default_value' => variable_get('teenus_service_application_url', '') . '/' . RT_TEENUS_IMPORTERNODES_API_URI,
+  );
+
+  $form['terms_api_url'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Termide API url',
+    '#size' => 60,
+    '#required' => TRUE,
+    '#default_value' => variable_get('teenus_service_application_url', '') . '/' . RT_TEENUS_IMPORTERTERMS_API_URI,
+  );
+
+  $form['import_institution'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Import particular institution services'),
+    '#description' => 'Use this field if you don\'t need to import all services. Define sub-institution or ministry term name (exatly as it is in the Riigiteenused: "valitsuse puu" taxonomy).',
+    '#size' => 60,
+    '#required' => FALSE,
+    '#default_value' => '',
+  );
+
+  $form['submit_button'] = array(
+    '#type' => 'submit',
+    '#value' => t('Synchronize services and taxonomies'),
+  );
+
+  module_load_include('inc', 'rt_teenus_importer', 'inc/importer');
+  $importer_factory_log_varibale = variable_get(Importer::IF_STATE_LOG, FALSE);
+  $importer_factory_log = $importer_factory_log_varibale ? drupal_json_decode($importer_factory_log_varibale) : array();
+
+  $form['previous_log'] = array(
+    '#markup' => implode("<br>", $importer_factory_log),
+    '#prefix' => '<br><b>Last execution log:</b><p>',
+    '#suffix' => '</p>',
+  );
+
+  return $form;
+}
+
+/**
+ * Implements hook_form_submit().
+ */
+function rt_teenus_importer_form_submit($form, &$form_state) {
+  if (!variable_get('teenus_host_application', FALSE)) {
+    $institution_term = trim($form_state['values']['import_institution']);
+
+    module_load_include('inc', 'rt_teenus_importer', 'inc/importer_factory');
+    ImporterFactory::build(
+      $form_state['values']['terms_api_url'],
+      $form_state['values']['nodes_api_url'] . $institution_term
+    )->forceImportFromForm();
+  }
+  else {
+    drupal_set_message(t('On host application!'));
+  }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function rt_teenus_importer_cron() {
+  if (!variable_get('teenus_host_application', FALSE)) {
+    if (in_array(date("G"), range(0, 6)) || (bool) variable_get('teenus_import_skip_time_check', FALSE) === TRUE) {
+      module_load_include('inc', 'rt_teenus_importer', 'inc/importer_factory');
+      ImporterFactory::build(
+        variable_get('teenus_service_application_url', '') . '/' . RT_TEENUS_IMPORTERTERMS_API_URI,
+        variable_get('teenus_service_application_url', '') . '/' . RT_TEENUS_IMPORTERNODES_API_URI
+      )->runNextTask();
+    }
+    else {
+      drupal_set_message(t('Importer: Out of execution time range!'));
+    }
+  }
+  else {
+    drupal_set_message(t('Importer: On host application!'));
+  }
+}
+
+/**
+ * Implements hook_mail().
+ */
+function rt_teenus_importer_mail($key, &$message, $params) {
+  if ($key == 'rt_importer_common') {
+    $message['subject'] = 'Terms and Services importer';
+    $message['body'][] = sprintf('%s <br/>', $params['message']);
+  }
+}

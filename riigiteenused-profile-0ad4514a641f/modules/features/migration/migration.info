@@ -1,0 +1,13 @@
+name = Migration
+description = FEATURE MODULE - taksonoomiate migratsioonid
+core = 7.x
+package = Riigiteenused
+dependencies[] = migrate
+dependencies[] = migrate_ui
+features[features_api][] = api:2
+files[] = migration.migrate.inc
+files[] = migrations/gov_structure.inc
+files[] = migrations/service_area.inc
+files[] = migrations/service_type.inc
+files[] = migrations/measurement_years.inc
+files[] = migrations/channels_structure.inc

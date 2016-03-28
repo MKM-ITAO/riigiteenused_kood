@@ -1,0 +1,6 @@
+name = Riigiteenused - Teenuse Statistika
+description = Vastab teenuse mõõdetud aastade põhjal statistika genereerimisest.
+core = 7.x
+package = "Riigiteenused"
+
+dependencies[] = rt_teenus

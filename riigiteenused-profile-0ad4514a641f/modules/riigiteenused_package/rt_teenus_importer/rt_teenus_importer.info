@@ -1,0 +1,6 @@
+name = Riigiteenuste Importer
+description = Teenuste sisselugemis moodul
+core = 7.x
+package = "Riigiteenused"
+
+dependencies[] = teenus

@@ -1,0 +1,12 @@
+/libraries
+modules/contrib/
+themes/adminimal_theme/
+themes/bootstrap/
+themes/vp_theme/templates/riigiteenused_views
+
+# SASS
+.sass-cache
+*.css.map
+
+# BUNDLER
+Gemfile.lock

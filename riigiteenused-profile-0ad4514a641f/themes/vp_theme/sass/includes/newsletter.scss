@@ -1,0 +1,116 @@
+//
+// Here are styles for the editor preview of the e-mail that is
+// generated from the simplenews_content_selection module.
+//
+
+@if $layout == editor or
+    $layout == global {
+  .static-image-aside-text {
+    // background: url(../img/20-default/news-page-separator.png) repeat-x 0 100%;
+    background: url(../img/10-global/newsletter-border.png) repeat-x 0 100%;
+    margin-bottom: 13px !important;
+    width: 100%;
+
+    td {
+      padding: 0 !important;
+    }
+
+    .left,
+    .right {
+      padding-bottom: 20px !important;
+    }
+
+    .left {
+      font-size: 14px;
+      padding-right: 20px;
+      vertical-align: top;
+    }
+
+    .right {
+      vertical-align: middle;
+      width: 120px;
+    }
+  }
+
+  .static-image-aside-text,
+  #newsletter {
+    a {
+      color: #008eb1 !important;
+      text-decoration: none;
+
+      &:hover,
+      &:focus {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  #newsletter {
+    table {
+      line-height: 20px;
+      margin: 0 0 9px 0 !important;
+    }
+
+    .field-name-title h2 {
+      color: #00668C;
+      font-size: 15px;
+      font-weight: bold;
+      line-height: 16px;
+      padding-bottom: 7px;
+    }
+
+    .ds-1col {
+      padding: 2px 0 !important;
+    }
+  }
+}
+
+
+
+@if $layout == editor {
+  .node-type-newsletter-news {
+    background-color: #F6F5EF;
+  }
+
+  #newsletter {
+    background: #fff;
+    margin: 0 auto;
+    padding: 45px;
+    width: 510px;
+
+    &,
+    * {
+      font-family: Tahoma, Verdana, Segoe, sans-serif;
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .field-name-title h2 {
+      font-weight: bold;
+    }
+
+    img {
+      margin: 0;
+    }
+
+    a {
+      color: #008EB1;
+    }
+
+    .node {
+      padding-bottom: 30px;
+    }
+
+
+  }
+}
+
+
+
+@if $layout == global {
+  #newsletter {
+    .image {
+      @include image-class-reset;
+    }
+  }
+}

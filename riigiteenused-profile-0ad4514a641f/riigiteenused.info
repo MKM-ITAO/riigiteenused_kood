@@ -1,0 +1,50 @@
+name = Teenuste kataloogi profiil
+core = 7.x
+base theme = vp_theme
+;base theme = bootstrap
+
+dependencies[] = admin_menu
+dependencies[] = admin_menu_toolbar
+dependencies[] = admin_views
+dependencies[] = block
+dependencies[] = features
+dependencies[] = field_group
+dependencies[] = i18n
+dependencies[] = i18nviews
+dependencies[] = i18n_field
+dependencies[] = local_tasks_fixed_to_bottom
+dependencies[] = module_filter
+dependencies[] = path
+dependencies[] = pathauto
+dependencies[] = scheduler
+dependencies[] = taxonomy
+dependencies[] = i18n_taxonomy
+dependencies[] = uuid
+dependencies[] = uuid_features
+
+; Custom modules
+dependencies[] = rt_teenus
+dependencies[] = rt_teenus_statistic
+dependencies[] = rt_teenus_api
+
+;Disable these after go live
+dependencies[] = dblog
+dependencies[] = devel
+dependencies[] = diff
+dependencies[] = field_ui
+dependencies[] = search_krumo
+dependencies[] = views_ui
+
+;Enable these on go live
+;dependencies[] = syslog
+
+;Custom
+
+;Features
+dependencies[] = base_configuration
+dependencies[] = taxonomies
+dependencies[] = teenus
+dependencies[] = roles_and_permissions
+dependencies[] = migration
+dependencies[] = menus
+dependencies[] = services_search

@@ -1,0 +1,6 @@
+name = Riigiteenuste API
+description = Teenuse pärimis API
+core = 7.x
+package = "Riigiteenused"
+
+dependencies[] = teenus

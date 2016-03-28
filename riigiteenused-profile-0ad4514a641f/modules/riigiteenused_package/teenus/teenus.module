@@ -1,0 +1,785 @@
+<?php
+/**
+ * @file
+ * Code for the Teenus feature.
+ */
+
+include_once 'teenus.features.inc';
+
+/**
+ * Implements hook_menu().
+ */
+function teenus_menu() {
+  $items = array();
+  $items['admin/config/teenus_application_configuration'] = array(
+    'title' => 'Application Configuration',
+    'description' => 'Configuration on VP application side.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('teenus_application_configuration_form'),
+    'access arguments' => array('access administration pages'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+function teenus_theme_registry_alter(&$theme_registry) {
+  // Add overridden templates from the jmc_product module directory.
+  $module_path = drupal_get_path('module', 'teenus');
+  // Find all .tpl.php files in this module's folder recursively.
+  $template_file_objects = drupal_find_theme_templates($theme_registry, '.tpl.php', $module_path);
+
+  // Iterate through all found template file objects.
+  foreach ($template_file_objects as $key => $template_file_object) {
+    // If the template has not already been overridden by a theme.
+    if (!isset($theme_registry[$key]['theme path']) || !preg_match('#/themes/#', $theme_registry[$key]['theme path'])) {
+      // Alter the theme path and template elements.
+      $theme_registry[$key]['theme path'] = $module_path;
+      $theme_registry[$key] = array_merge($theme_registry[$key], $template_file_object);
+      $theme_registry[$key]['type'] = 'module';
+    }
+  }
+}
+
+/**
+ * Form callback.
+ *
+ * Renders application configuration form.
+ *
+ * @return mixed
+ *   form array.
+ */
+function teenus_application_configuration_form() {
+  $form = array();
+
+  $vocabulary = taxonomy_vocabulary_machine_name_load('valitsuse_puu')->vid;
+  $institutions = taxonomy_get_tree($vocabulary);
+  $ministries = taxonomy_get_tree($vocabulary, 0, 1);
+
+
+  $form['teenus_host_application'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('On host application'),
+    '#default_value' => variable_get('teenus_host_application', FALSE),
+    '#description' => t('Check if you are configuring Government Services main application.'),
+  );
+
+  $form['service_provider']['teenus_vp_service_provider_type'] = array(
+    '#type' => 'radios',
+    '#title' => t('Service providers'),
+    '#description' => t('Please select service provider type. This selection will affect ministry and sub-institution statistics pages.'),
+    '#default_value' => variable_get('teenus_vp_service_provider_type', FALSE),
+    '#options' => array(
+      'teenus_vp_service_provider_institution' => t('Sub-institution'),
+      'teenus_vp_service_provider_ministry' => t('Ministry'),
+      'teenus_vp_service_provider_government' => t('Government'),
+    ),
+  );
+
+  foreach (language_list() as $lang) {
+    $ministry_options = array();
+    $institution_options = array();
+    $curr_group = '';
+    foreach ($institutions as $institution) {
+      if ($institution->language == $lang->language) {
+        if (!taxonomy_get_parents($institution->tid)) {
+          $institution_options[$institution->name] = array();
+          $curr_group = $institution->name;
+        }
+        else {
+          $institution_options[$curr_group][$institution->name] = $institution->name;
+        }
+      }
+    }
+
+    foreach ($ministries as $ministry) {
+      if ($ministry->language == $lang->language) {
+        $ministry_options[$ministry->name] = $ministry->name;
+      }
+    }
+
+    $form['teenus_vp_service_provider_institution_' . $lang->language] = array(
+      '#type' => 'select',
+      '#title' => t('Which service provider to use in @language_name language ?', array('@language_name' => $lang->name)),
+      '#default_value' => variable_get('teenus_vp_service_provider_institution_' . $lang->language, ''),
+      '#description' => t('Exactly same term name like in "Valitsuse puu"! This constant affects on search institution filter and pre-defines contextual filter in institution / institution views.'),
+      '#options' => $institution_options,
+      '#states' => array(
+        'visible' => array(
+          ':input[name="teenus_vp_service_provider_type"]' => array('value' => 'teenus_vp_service_provider_institution'),
+        ),
+      ),
+    );
+
+    $form['teenus_vp_service_provider_ministry_' . $lang->language] = array(
+      '#type' => 'select',
+      '#title' => t('Which service provider to use in @language_name language ?', array('@language_name' => $lang->name)),
+      '#default_value' => variable_get('teenus_vp_service_provider_ministry_' . $lang->language, ''),
+      '#description' => t('Exactly same term name like in "Valitsuse puu"! This constant affects on search institution filter and pre-defines contextual filter in institution / institution views.'),
+      '#options' => $ministry_options,
+      '#states' => array(
+        'visible' => array(
+          ':input[name="teenus_vp_service_provider_type"]' => array('value' => 'teenus_vp_service_provider_ministry'),
+        ),
+      ),
+    );
+  }
+
+  $form['teenus_service_application_url'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Application URL',
+    '#default_value' => variable_get('teenus_service_application_url', ''),
+    '#description' => '',
+    '#states' => array(
+      'visible' => array(
+        ':input[name="teenus_host_application"]' => array('checked' => FALSE),
+      ),
+    ),
+  );
+
+  $institution_options = array();
+  $institution_options[''] = '';
+  global $language;
+  foreach ($institutions as $institution) {
+    if ($institution->language == $language->language) {
+      if (!taxonomy_get_parents($institution->tid)) {
+        $institution_options[$institution->name] = $institution->name;
+      }
+      else {
+        $institution_options[$institution->name] = $institution->name;
+      }
+    }
+  }
+  $form['teenus_service_institution_name'] = array(
+    '#type' => 'select',
+    '#title' => t('Which institution services to import?'),
+    '#default_value' => variable_get('teenus_service_institution_name', ''),
+    '#description' => t('Exactly same term name like in "Valitsuse puu"! To import only ministery or sub-institution.'),
+    '#options' => $institution_options,
+    '#states' => array(
+      'visible' => array(
+        ':input[name="teenus_host_application"]' => array('checked' => FALSE),
+      ),
+    ),
+  );
+
+  $form['teenus_import_bunch_number'] = array(
+    '#type' => 'select',
+    '#title' => t('How many services nodes to import per iteration?'),
+    '#default_value' => variable_get('teenus_import_bunch_number', 300),
+    '#description' => t('Define how many services needs to imported per import iteration. Number of services imported per iteration will be takes fron this variable value.'),
+    '#options' => array_combine(range(100, 600, 100), range(100, 600, 100)),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="teenus_host_application"]' => array('checked' => FALSE),
+      ),
+    ),
+  );
+
+  $form['teenus_import_notification_emails'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Emails to send notifications to'),
+    '#description' => t('Enter comma separeted emails where to send notificatoins to. Ex: airi.reidi@mkm.ee,risto.hinno@mkm.ee'),
+    '#default_value' => variable_get('teenus_import_notification_emails', 'airi.reidi@mkm.ee,risto.hinno@mkm.ee'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="teenus_host_application"]' => array('checked' => FALSE),
+      ),
+    ),
+  );
+
+  $form['teenus_import_skip_time_check'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Run importer all the time'),
+    '#description' => t('Use it visely! Should be disabled on the LIVE site.'),
+    '#default_value' => variable_get('teenus_import_skip_time_check', FALSE),
+  );
+
+  return system_settings_form($form);
+}
+
+/**
+ * Implements hook_init().
+ */
+function teenus_init() {
+  drupal_add_css(drupal_get_path('module', 'teenus') . '/css/riigiteenused.css');
+  drupal_add_js(drupal_get_path('module', 'teenus') . '/js/riigiteenused.js', array(
+    'type' => 'file',
+    'scope' => 'footer',
+  ));
+}
+
+/**
+ * Implements hook_node_presave().
+ */
+function teenus_node_presave($node) {
+  $node->field_t_varu_title['und'][0]['value'] = isset($node->title) ? $node->title : '';
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function teenus_form_alter(&$form, &$form_state, $form_id) {
+  global $language;
+  if ($form_id == 'views_exposed_form' && $form['#id'] == 'views-exposed-form-teenuste-otsing-teenuste-otsing-page') {
+    $form['sort_by']['#title'] = t('Sort');
+    /*
+     * Show only year that have measured channels.
+     */
+    if (isset($form['field_fcf_mootmise_aasta_tid'])
+      && is_array($form['field_fcf_mootmise_aasta_tid']['#options'])
+    ) {
+      $arg = arg();
+      $institution_term_tid = array_pop($arg);
+      $institution_term_tid = is_numeric($institution_term_tid) ? $institution_term_tid : NULL;
+      $options_list = $form['field_fcf_mootmise_aasta_tid']['#options'];
+      foreach ($options_list as $tid => $name) {
+        if (!_teenus_get_check_for_measured_channels($tid, $institution_term_tid)
+          && $tid != 'All'
+          && isset($form['field_fcf_mootmise_aasta_tid']['#options'][$tid])
+        ) {
+          unset($form['field_fcf_mootmise_aasta_tid']['#options'][$tid]);
+        }
+      }
+    }
+
+    /*
+     * Changes for service search view.
+     */
+
+    /*
+     * Placeholder for title filter field (main search field).
+     */
+    if (isset($form['title-search'])) {
+      $form['title-search']['#attributes']['placeholder'] = t('Enter keyword');
+      // Kirjeldus field search should be hidden and value automatically added
+      // in query_alter hook.
+      drupal_add_css('#edit-field-t-kirjeldus-value-wrapper {display:none;}', array('type' => 'inline'));
+    }
+
+    /*
+     * Show only channels of second lvl > no main terms are displayed.
+     */
+    if (isset($form['field_fcf_kanal_tid'])
+      && is_array($form['field_fcf_kanal_tid']['#options'])
+    ) {
+      if ($channels_voc = taxonomy_vocabulary_machine_name_load('kanaalide_struktuur')) {
+        unset($form['field_fcf_kanal_tid']['#options']);
+        $channels  = i18n_taxonomy_localize_terms(taxonomy_get_tree($channels_voc->vid));
+        if (is_array($channels)) {
+          foreach ($channels as $channel_term) {
+            if (taxonomy_get_parents($channel_term->tid) == array()) {
+              continue;
+            }
+            $term_object = new stdClass();
+            $term_object->option[$channel_term->tid] = $channel_term->name;
+            $form['field_fcf_kanal_tid']['#options'][] = $term_object;
+          }
+        }
+      }
+    }
+
+    /*
+     * Show institutions / ministries list according to application
+     * configuration.
+     */
+    if (isset($form['field_t_allasutuse_reference_tid'])
+      && is_array($form['field_t_allasutuse_reference_tid']['#options'])
+      && !variable_get('teenus_host_application', FALSE)
+    ) {
+      switch (TRUE) {
+        case variable_get('teenus_vp_service_provider_type', FALSE) === 'teenus_vp_service_provider_institution':
+          // Hide institution filter.
+          $form['field_t_allasutuse_reference_tid']['#access'] = FALSE;
+          drupal_add_css('#edit-field-t-allasutuse-reference-tid-wrapper {display:none;}', array('type' => 'inline'));
+          break;
+
+        case variable_get('teenus_vp_service_provider_type', TRUE) === 'teenus_vp_service_provider_government':
+          // Show only terms with nodes.
+          $options = $form['field_t_allasutuse_reference_tid']['#options'];
+          foreach ($options as $key => $option) {
+            $keys = array_keys($option->option);
+            $term = taxonomy_term_load($keys[0]);
+            $nodes = taxonomy_select_nodes($term->tid, FALSE);
+            $parents = taxonomy_get_parents($term->tid);
+            if (empty($nodes)
+              && !empty($parents)
+              || $term->language != $language->language
+            ) {
+              unset($form['field_t_allasutuse_reference_tid']['#options'][$key]);
+            }
+          }
+          break;
+      }
+    }
+
+    if ($form_id == 'views_exposed_form') {
+      if (isset($form['field_t_teenuse_tyyp_tid'])) {
+        foreach ($form['field_t_teenuse_tyyp_tid']['#options'] as $option_id => $term_option) {
+          $option_term = taxonomy_term_load($option_id);
+          if ($option_term && $option_term->language != $language->language) {
+            unset($form['field_t_teenuse_tyyp_tid']['#options'][$option_id]);
+          }
+        }
+      }
+
+      if (isset($form['field_fcf_kanal_tid'])) {
+        $channel_options = array();
+        foreach ($form['field_fcf_kanal_tid']['#options'] as $option_id1 => $term_option1) {
+          $tid = array_keys($term_option1->option);
+          $option_term1 = taxonomy_term_load($tid[0]);
+          if ($option_term1 && $option_term1->language == $language->language) {
+            $channel_options[] = (object) array('option' => array($tid[0] => $option_term1->name));
+          }
+        }
+        $form['field_fcf_kanal_tid']['#options'] = $channel_options;
+      }
+
+      if (isset($form['field_t_tegevusvaldkond_tid'])) {
+        foreach ($form['field_t_tegevusvaldkond_tid']['#options'] as $option_id => $term_option) {
+          $tid = array_keys($term_option->option);
+          $option_term = taxonomy_term_load($tid[0]);
+          if ($option_term && $option_term->language != $language->language) {
+            unset($form['field_t_tegevusvaldkond_tid']['#options'][$option_id]);
+          }
+        }
+      }
+
+      if (isset($form['field_t_allasutuse_reference_tid']['#options'])) {
+        $allasutuse_options = array();
+        foreach ($form['field_t_allasutuse_reference_tid']['#options'] as $allasutuse_option) {
+          if (!is_object($allasutuse_option)) {
+            $form['field_t_allasutuse_reference_tid']['#validated'] = TRUE;
+            $form['field_t_allasutuse_reference_tid']['#default_value'] = $allasutuse_option;
+            $allasutuse_options[] = $allasutuse_option;
+            continue;
+          }
+          $allasutuse_term_key = array_keys($allasutuse_option->option);
+          if (is_numeric($allasutuse_term_key[0])) {
+           $allasutuse_term = taxonomy_term_load($allasutuse_term_key[0]);
+            if ($allasutuse_term->language == $language->language) {
+              $allasutuse_options[] = $allasutuse_option;
+            }
+          }
+        }
+        $form['field_t_allasutuse_reference_tid']['#options'] = $allasutuse_options;
+      }
+
+    }//views_exposed_form
+
+    // Add select2 library.
+    if ($form['#id'] == 'views-exposed-form-teenuste-otsing-teenuste-otsing-page') {
+      drupal_add_css(drupal_get_path('module', 'teenus') . '/libraries/select2/css/select2.min.css');
+      drupal_add_js(drupal_get_path('module', 'teenus') . '/libraries/select2/js/select2.min.js', array(
+        'type' => 'file',
+        'scope' => 'footer',
+      ));
+      drupal_add_js(drupal_get_path('module', 'teenus') . '/js/teenus.js', array(
+        'type' => 'file',
+        'scope' => 'footer',
+      ));
+
+      $options = $form['field_t_allasutuse_reference_tid']['#options'];
+      // List of keys of terms that need to show on filter.
+      $parentterm = array();
+      foreach ($options as $key => $option) {
+        $keys = array_keys($option->option);
+        $term = taxonomy_term_load($keys[0]);
+        $nodes = taxonomy_select_nodes($term->tid, FALSE);
+        $parents = taxonomy_get_parents($term->tid);
+        if (empty($nodes)
+          && !empty($parents)
+          || $term->language != $language->language
+        ) {
+          unset($form['field_t_allasutuse_reference_tid']['#options'][$key]);
+        }
+        if (!empty($nodes) && !empty($parents)) {
+          $parentterm[] = array_keys($parents);
+          $parentterm[] = $keys;
+        }
+      }
+      $options = $form['field_t_allasutuse_reference_tid']['#options'];
+      foreach ($options as $key => $option) {
+        $keys = array_keys($option->option);
+        // Remove items (unused first level terms) from filter.
+        if (!in_array($keys, $parentterm)) {
+          unset($form['field_t_allasutuse_reference_tid']['#options'][$key]);
+        }
+      }
+    }
+
+  }
+
+  if ($form_id == 'teenus_node_form') {
+
+    $form['language']['#access'] = FALSE;
+
+    if (isset($form['field_t_teenuse_tyyp'])) {
+      foreach ($form['field_t_teenuse_tyyp'][LANGUAGE_NONE]['#options'] as $option_id => $term_option) {
+        if (is_numeric($option_id)) {
+          $option_term = taxonomy_term_load($option_id);
+          if ($option_term && $option_term->language != $language->language) {
+            unset($form['field_t_teenuse_tyyp'][LANGUAGE_NONE]['#options'][$option_id]);
+          }
+        }
+      }
+    }
+
+    if (isset($form['field_fcf_kanal'])) {
+      $channel_options = array();
+      foreach ($form['field_fcf_kanal']['#options'] as $option_id1 => $term_option1) {
+        $tid = array_keys($term_option1->option);
+        $option_term1 = taxonomy_term_load($tid[0]);
+        if ($option_term1 && $option_term1->language == $language->language) {
+          $channel_options[] = (object) array('option' => array($tid[0] => $option_term1->name));
+        }
+      }
+      $form['field_fcf_kanal_tid']['#options'] = $channel_options;
+    }
+
+    if (isset($form['field_t_tegevusvaldkond'])) {
+      $type_options = array();
+      foreach ($form['field_t_tegevusvaldkond'][LANGUAGE_NONE]['#options'] as $type_option_id => $term_option) {
+        if (is_numeric($type_option_id)) {
+          $option_term = taxonomy_term_load($type_option_id);
+          if ($option_term && $option_term->language != $language->language) {
+            unset($form['field_t_tegevusvaldkond']['und']['#options'][$type_option_id]);
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_views_pre_view().
+ */
+function teenus_views_pre_view(&$view, &$display_id, &$args) {
+  global $language;
+  if (($view->name == 'teenuste_statistika' || $view->name == 'ministeeriumi_teenuste_statistika')
+    && ($display_id == 'allasutuse_teenused_numbrites' || $display_id == 'ministeeriumi_teenused_numbrites')
+  ) {
+    if (!variable_get('teenus_host_application', FALSE)) {
+      if (variable_get('teenus_vp_service_provider_type', FALSE) === 'teenus_vp_service_provider_institution') {
+        $args[] = key(taxonomy_get_term_by_name(variable_get('teenus_vp_service_provider_institution_' . $language->language, ''), 'valitsuse_puu'));
+      }
+      elseif (variable_get('teenus_vp_service_provider_type', FALSE) === 'teenus_vp_service_provider_ministry') {
+        $args[] = key(taxonomy_get_term_by_name(variable_get('teenus_vp_service_provider_ministry_' . $language->language, ''), 'valitsuse_puu'));
+      }
+    }
+    else {
+      global $user;
+      $loaded_user = user_load($user->uid);
+      $args[] = isset($loaded_user->field_u_asutus[LANGUAGE_NONE]) ? $loaded_user->field_u_asutus[LANGUAGE_NONE][0]['tid'] : '';
+    }
+  }
+}
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function teenus_views_query_alter(&$view, &$query) {
+  /*
+   * Alter service search view's query.
+   * Description value should also be the same as title field. Entered
+   * description value should be used if was entered.
+   */
+  if ($view->name == 'teenuste_otsing') {
+    if (isset($view->exposed_input['title-search'])
+      && !empty($view->exposed_input['title-search'])
+    ) {
+      unset($query->where[1]);
+
+      $query->add_where(0,
+        db_or()
+          ->condition('title', "%" . $view->exposed_input['title-search'] . "%", 'LIKE')
+          ->condition('field_t_kirjeldus_value', "%" . $view->exposed_input['title-search'] . "%", 'LIKE')
+      );
+    }
+
+    if (isset($view->exposed_input['field_t_allasutuse_reference_tid'])
+      && !empty($view->exposed_input['field_t_allasutuse_reference_tid'])
+      && is_array($view->exposed_input['field_t_allasutuse_reference_tid'])
+    ) {
+      $terms = array_values($view->exposed_input['field_t_allasutuse_reference_tid']);
+      $ministry_institution_terms_total = array();
+
+      foreach ($terms as $tid) {
+        if (taxonomy_get_parents($tid) === array() && taxonomy_term_load($tid)) {
+          $ministry_institution_terms = array_keys(taxonomy_get_children($tid));
+          $ministry_institution_terms_total = array_merge($ministry_institution_terms_total, $ministry_institution_terms);
+
+          $index = isset($query->where[3]) ? 3 : 2;
+          $filter_values = $query->where[$index]['conditions'];
+          foreach ($filter_values as $key => $filter) {
+            if ($filter['field'] === 'field_data_field_t_allasutuse_reference.field_t_allasutuse_reference_tid') {
+              unset($query->where[$index]['conditions'][$key]);
+              break;
+            }
+          }
+        }
+      }
+      if (!empty($ministry_institution_terms_total)) {
+        $query->add_table('field_data_field_t_allasutuse_reference', 'node');
+        $query->add_where(1, 'field_data_field_t_allasutuse_reference.field_t_allasutuse_reference_tid', $ministry_institution_terms_total, 'IN');
+      }
+    }
+  }
+}
+
+
+
+/*
+ * Utility functions.
+ */
+
+/**
+ * Get service's most important URL.
+ *
+ * Function will collect service's all channels URL from field collections,
+ * sort them according to channel term's hierarchical position in taxonomy and
+ * return most important channel's URL.
+ *
+ * @param object $node
+ *   Node object.
+ *
+ * @return bool|mixed
+ *   URL of false if no url found.
+ */
+function _teenus_get_most_important_channel_link($node) {
+  $url = FALSE;
+  $measured_years = field_get_items('node', $node, 'field_c_mootmise_aasta');
+  if ($measured_years) {
+    $channels_urls = array();
+    foreach ($measured_years as $year_fc_id) {
+      $year_fc = field_collection_item_load($year_fc_id['value']);
+      $year_measured_channels = field_get_items('field_collection_item', $year_fc, 'field_fcf_mootmise_kanal');
+      if ($year_measured_channels) {
+        foreach ($year_measured_channels as $measured_channel_fc_id) {
+          $measured_channel_fc
+            = field_collection_item_load($measured_channel_fc_id['value']);
+          $channel_term
+            = isset($measured_channel_fc->field_fcf_kanal[LANGUAGE_NONE]) ? taxonomy_term_load($measured_channel_fc->field_fcf_kanal[LANGUAGE_NONE][0]['tid']) : FALSE;
+          if ($channel_term) {
+            $channels_urls[$channel_term->hweight]
+              = isset($measured_channel_fc->field_fcf_viide_teenusele[LANGUAGE_NONE]) ? $measured_channel_fc->field_fcf_viide_teenusele[LANGUAGE_NONE][0]['url'] : '';
+          }
+        }
+      }
+    }
+    ksort($channels_urls);
+    $url = array_shift($channels_urls);
+  }
+
+  return $url;
+}
+
+/**
+ * Search for measured channels on passed year term.
+ *
+ * Will also check if those nodes are referenced to passed institution term, if
+ * not null.
+ *
+ * @param int $year_term_tid
+ *   Year term id.
+ * @param int $institution_term_tid
+ *   Institution term id. Might be NULL.
+ *
+ * @return bool
+ *   Does any channel was measured in this institution?
+ */
+function _teenus_get_check_for_measured_channels($year_term_tid, $institution_term_tid) {
+  $result = FALSE;
+
+  if (taxonomy_term_load($year_term_tid)) {
+    $query = new EntityFieldQuery();
+    $measured_years_fc = $query->entityCondition('entity_type', 'field_collection_item')
+      ->entityCondition('bundle', 'field_c_mootmise_aasta')
+      ->fieldCondition('field_fcf_mootmise_aasta', 'tid', $year_term_tid)
+      ->execute();
+    if (isset($measured_years_fc['field_collection_item'])) {
+      $measured_years_fc_ids = array_keys($measured_years_fc['field_collection_item']);
+      $sub_query  = new EntityFieldQuery();
+      $sub_query->entityCondition('entity_type', 'node')
+        ->entityCondition('bundle', 'teenus')
+        ->fieldCondition('field_c_mootmise_aasta', 'value', $measured_years_fc_ids, 'IN');
+      if (!is_null($institution_term_tid)) {
+        $children = taxonomy_get_children($institution_term_tid);
+        if (!empty($children)) {
+          $sub_query->fieldCondition('field_t_allasutuse_reference', 'tid', array_keys($children), 'IN');
+        }
+        else {
+          $sub_query->fieldCondition('field_t_allasutuse_reference', 'tid', $institution_term_tid);
+        }
+      }
+      $services = $sub_query->execute();
+
+      $result = !empty($services);
+    }
+  }
+
+  return $result;
+}
+
+/**
+ * Get passed service's statistics array.
+ *
+ * Function calculates passed service's statistics and return array with total
+ * statistic numbers for passed year or all years together if no year passed.
+ *
+ * @param int $nid
+ *   Service node's nid.
+ * @param int $year
+ *   Year term's tid.
+ *
+ * @return array
+ *   service's statistics
+ */
+function _teenus_get_statistics($nid, $year) {
+  global $language;
+  $channels_statistics = array();
+
+  if ($service_node = node_load($nid)) {
+    if ($service_node->language != $language->language) {
+      return array();
+    }
+    $year = is_numeric($year) ? $year : FALSE;
+    $measured_years = field_get_items('node', $service_node, 'field_c_mootmise_aasta');
+    if (is_array($measured_years) && !empty($measured_years)) {
+      foreach ($measured_years as $measured_years_fc_block) {
+        $measured_years_fc = field_collection_item_load($measured_years_fc_block['value']);
+        // Year filter selected.
+        if ($year
+          && isset($measured_years_fc->field_fcf_mootmise_aasta[LANGUAGE_NONE])
+          && $year == $measured_years_fc->field_fcf_mootmise_aasta[LANGUAGE_NONE][0]['tid']
+          || !$year
+        ) {
+          _teenus_extract_year_channel_statistics($measured_years_fc, $channels_statistics);
+        }
+        else {
+          continue;
+        }
+      }
+    }
+  }
+
+  if (!empty($channels_statistics)) {
+    $ref = $channels_statistics;
+    foreach ($ref as $channel_name => $stat) {
+      if (!is_null($channels_statistics[$channel_name]['rahuolu'])) {
+        @$channels_statistics['total']['totalsum']
+          += $channels_statistics[$channel_name]['rahuolu'];
+      }
+      elseif (isset($channels_statistics['total'])
+        && !is_null($channels_statistics['total']['totalsum'])
+      ) {
+        @$channels_statistics['total']['totalsum'] = $channels_statistics['total']['totalsum'];
+      }
+      else {
+        @$channels_statistics['total']['totalsum'] = NULL;
+      }
+
+      @$channels_statistics['total']['totalcount'] += $channels_statistics[$channel_name]['rahuolu_counter'];
+      @$channels_statistics['total']['rahuolu_counter'] += $channels_statistics[$channel_name]['rahuolu_counter'];
+
+      /*
+       * Total statistics are calculated here because at this point channels
+       * with same names (measured in different years: 2011, 2013... etc) are
+       * already grouped together so rahuolu counter's value are incremented
+       * once per channel name not simply be channel no matter what name it
+       * have.
+       */
+      /*
+       * This special behavior for the "rahuolu" is made because value might
+       * be in range of [-100,100] including 0. But if the "rahuolu" is empty
+       * dash needs to be displayed so we need to understand when value is
+       * empty and not 0 (not NULL constant).
+       */
+      if (!is_null($channels_statistics[$channel_name]['rahuolu'])) {
+        @$channels_statistics['total']['rahuolu']
+          += $channels_statistics[$channel_name]['rahuolu'];
+      }
+      elseif (isset($channels_statistics['total']['rahuolu'])
+        && !is_null($channels_statistics['total']['rahuolu'])
+      ) {
+        @$channels_statistics['total']['rahuolu'] = $channels_statistics['total']['rahuolu'];
+      }
+      else {
+        @$channels_statistics['total']['rahuolu'] = NULL;
+      }
+
+      if ($channels_statistics[$channel_name]['rahuolu_counter'] !== 0) {
+        $channels_statistics[$channel_name]['rahuolu']
+          = round($channels_statistics[$channel_name]['rahuolu'] / $channels_statistics[$channel_name]['rahuolu_counter'], 2);
+      }
+
+      @$channels_statistics['total']['osutamis_arv']
+        += $channels_statistics[$channel_name]['osutamis_arv'];
+      @$channels_statistics['total']['halduskulu']
+        += $channels_statistics[$channel_name]['halduskulu'];
+      @$channels_statistics['total']['halduskormus']
+        += $channels_statistics[$channel_name]['halduskormus'];
+    }
+
+    if ($channels_statistics['total']['rahuolu_counter'] !== 0) {
+      $channels_statistics['total']['rahuolu']
+        = round($channels_statistics['total']['rahuolu'] / $channels_statistics['total']['rahuolu_counter'], 2);
+    }
+  }
+
+  return $channels_statistics;
+}
+
+/**
+ * Extract year statistics.
+ *
+ * Function extracts all statistics from passed measured year field collection
+ * object. Extracted statistics will be added to the $channels_statistics
+ * array, passed by reference.
+ *
+ * @param object $measured_years_fc
+ *   Measured year field collection object.
+ * @param array &$channels_statistics
+ *   Channel statistics passed by reference.
+ */
+function _teenus_extract_year_channel_statistics($measured_years_fc, &$channels_statistics) {
+  $measured_channels = field_get_items('field_collection_item', $measured_years_fc, 'field_fcf_mootmise_kanal');
+  if (!empty($measured_channels)) {
+    foreach ($measured_channels as $measured_channels_fc_block) {
+      $measured_channels_fc = field_collection_item_load($measured_channels_fc_block['value']);
+      if (isset($measured_channels_fc->field_fcf_kanal[LANGUAGE_NONE])
+        && $channel_term = i18n_taxonomy_localize_terms(taxonomy_term_load($measured_channels_fc->field_fcf_kanal[LANGUAGE_NONE][0]['tid']))
+      ) {
+        /*
+         * This special behavior for the "rahuolu" is made because value might
+         * be in range of [-100,100] including 0. But if the "rahuolu" is empty
+         * dash needs to be displayed so we need to understand when value is
+         * empty and not 0 (not NULL constant).
+         */
+        if (!empty($measured_channels_fc->field_fcf_aasta_rahulolu)) {
+          @$channels_statistics[$channel_term->name]['rahuolu']
+            += $measured_channels_fc->field_fcf_aasta_rahulolu[LANGUAGE_NONE][0]['value'];
+        }
+        elseif (isset($channels_statistics[$channel_term->name])
+          && !is_null($channels_statistics[$channel_term->name]['rahuolu'])
+        ) {
+          $channels_statistics[$channel_term->name]['rahuolu'] = $channels_statistics[$channel_term->name]['rahuolu'];
+        }
+        else {
+          $channels_statistics[$channel_term->name]['rahuolu'] = NULL;
+        }
+
+        @$channels_statistics[$channel_term->name]['osutamis_arv']
+          += $measured_channels_fc->field_fcf_osutamiste_arv[LANGUAGE_NONE][0]['value'];
+        @$channels_statistics[$channel_term->name]['halduskulu']
+          += $measured_channels_fc->field_fcf_aasta_halduskulu[LANGUAGE_NONE][0]['value'];
+        @$channels_statistics[$channel_term->name]['halduskormus']
+          += $measured_channels_fc->field_fcf_ajakulu_klientidele[LANGUAGE_NONE][0]['value'];
+        @$channels_statistics[$channel_term->name]['rahuolu_counter']
+          += !empty($measured_channels_fc->field_fcf_aasta_rahulolu) ? 1 : 0;
+      }
+    }
+  }
+}

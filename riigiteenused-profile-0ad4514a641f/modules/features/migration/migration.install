@@ -1,0 +1,14 @@
+<?php
+/**
+ * @file
+ * Riigiteenused migration module install file.
+ */
+
+/**
+ * Implements hook_disable().
+ */
+function migration_disable() {
+  Migration::deregisterMigration('GovStructure');
+  Migration::deregisterMigration('ServiceArea');
+  Migration::deregisterMigration('ServiceType');
+}

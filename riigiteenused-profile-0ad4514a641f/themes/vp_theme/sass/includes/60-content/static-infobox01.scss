@@ -1,0 +1,79 @@
+
+
+
+@if $layout == editor or
+    $layout == global {
+  .node .static-infobox01 {
+    font-family: $font_museo500;
+    line-height: 14px;
+    margin: 0 0 18px 0;
+
+    a {
+      font-size: 14px;
+    }
+
+    ul {
+      // Assume we need to insert this template inside another one
+      // but we'll not going to insert any ul's inside this one.
+      // So use important on all the properties.
+      li {
+        background-image: none;
+        background-position: 21px 50% !important;
+        background-repeat: no-repeat !important;
+        margin: 0 !important;
+        min-height: 28px !important;
+        padding: 14px 0 14px 75px !important;
+        position: relative !important;
+
+        // If inside
+        &:before {
+          bottom: auto !important;
+          content: "" !important;
+          display: block !important;
+          height: 40px !important;
+          left: 21px !important;
+          margin-top: -20px !important;
+          position: absolute !important;
+          top: 50% !important;
+          width: 40px !important;
+        }
+      }
+    }
+
+    .world:before {
+      background-image: url(../img/10-global/static-read-more-icon-world.png)
+    }
+
+    .telephone:before {
+      background-image: url(../img/10-global/static-read-more-icon-telephone.png)
+    }
+
+    .shadow:before {
+      background-image: url(../img/10-global/static-read-more-icon-shadow.png)
+    }
+
+    .person:before {
+      background-image: url(../img/10-global/static-read-more-icon-person.png)
+    }
+
+    .list:before {
+      background-image: url(../img/10-global/static-read-more-icon-list.png)
+    }
+
+    .external:before {
+      background-image: url(../img/10-global/static-read-more-icon-info-external.png)
+    }
+
+    .graph:before {
+      background-image: url(../img/10-global/static-read-more-icon-graph.png)
+    }
+
+    .download:before {
+      background-image: url(../img/10-global/static-read-more-icon-download.png)
+    }
+
+    .case:before {
+      background-image: url(../img/10-global/static-read-more-icon-case.png)
+    }
+  }
+}

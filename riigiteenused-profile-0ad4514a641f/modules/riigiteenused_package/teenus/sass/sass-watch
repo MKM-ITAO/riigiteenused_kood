@@ -1,0 +1,2 @@
+sass -r sass-globbing --watch riigiteenused.scss:../css/riigiteenused.css
+pause

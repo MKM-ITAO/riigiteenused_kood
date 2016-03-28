@@ -1,0 +1,1234 @@
+.page-node-add-teenus table,
+.page-node table,
+.page-node-edit.node-type-teenus table {
+  margin-bottom: 20px;
+  width: 70%; }
+  .page-node-add-teenus table thead > tr > th,
+  .page-node table thead > tr > th,
+  .page-node-edit.node-type-teenus table thead > tr > th {
+    color: #00678C;
+    font-size: 14px;
+    margin-bottom: 5px;
+    padding: 15px; }
+  .page-node-add-teenus table tbody > tr > td,
+  .page-node table tbody > tr > td,
+  .page-node-edit.node-type-teenus table tbody > tr > td {
+    padding: 15px; }
+  .page-node-add-teenus table input,
+  .page-node table input,
+  .page-node-edit.node-type-teenus table input {
+    width: 100%; }
+html.js .page-node-add-teenus form > div > fieldset.collapsible, html.js
+.page-node form > div > fieldset.collapsible, html.js
+.page-node-edit.node-type-teenus form > div > fieldset.collapsible {
+  height: auto;
+  margin-bottom: 30px; }
+.page-node-add-teenus form > div > fieldset.collapsible > legend,
+.page-node form > div > fieldset.collapsible > legend,
+.page-node-edit.node-type-teenus form > div > fieldset.collapsible > legend {
+  position: relative; }
+  html.js .page-node-add-teenus form > div > fieldset.collapsible > legend > span.fieldset-legend, html.js
+  .page-node form > div > fieldset.collapsible > legend > span.fieldset-legend, html.js
+  .page-node-edit.node-type-teenus form > div > fieldset.collapsible > legend > span.fieldset-legend {
+    padding-left: 20px;
+    background: none; }
+  .page-node-add-teenus form > div > fieldset.collapsible > legend > span.fieldset-legend > a,
+  .page-node form > div > fieldset.collapsible > legend > span.fieldset-legend > a,
+  .page-node-edit.node-type-teenus form > div > fieldset.collapsible > legend > span.fieldset-legend > a {
+    display: inline-block;
+    position: relative;
+    padding-left: 25px;
+    right: 20px;
+    font-family: "Roboto Condensed", sans-serif;
+    font-size: 17px;
+    background: url(../img/collapsed.png) no-repeat 0px 2px; }
+.page-node-add-teenus form > div > fieldset.collapsed > legend > span.fieldset-legend a,
+.page-node form > div > fieldset.collapsed > legend > span.fieldset-legend a,
+.page-node-edit.node-type-teenus form > div > fieldset.collapsed > legend > span.fieldset-legend a {
+  background: url(../img/collapse.png) no-repeat 0px 2px; }
+.page-node-add-teenus form label, .page-node-add-teenus form .form-required,
+.page-node form label,
+.page-node form .form-required,
+.page-node-edit.node-type-teenus form label,
+.page-node-edit.node-type-teenus form .form-required {
+  color: #00678C;
+  font-size: 14px;
+  margin-bottom: 5px; }
+.page-node-add-teenus form label.option,
+.page-node form label.option,
+.page-node-edit.node-type-teenus form label.option {
+  color: #000; }
+.page-node-add-teenus form input, .page-node-add-teenus form select,
+.page-node form input,
+.page-node form select,
+.page-node-edit.node-type-teenus form input,
+.page-node-edit.node-type-teenus form select {
+  border-color: #C9C6C6;
+  height: 32px;
+  font-size: 13px; }
+.page-node-add-teenus form input.form-checkbox, .page-node-add-teenus form input.form-radio,
+.page-node form input.form-checkbox,
+.page-node form input.form-radio,
+.page-node-edit.node-type-teenus form input.form-checkbox,
+.page-node-edit.node-type-teenus form input.form-radio {
+  height: auto;
+  position: relative;
+  bottom: 1px; }
+.page-node-add-teenus form .form-item input[type="radio"].error,
+.page-node-add-teenus form .form-item input[type="checkbox"].error,
+.page-node form .form-item input[type="radio"].error,
+.page-node form .form-item input[type="checkbox"].error,
+.page-node-edit.node-type-teenus form .form-item input[type="radio"].error,
+.page-node-edit.node-type-teenus form .form-item input[type="checkbox"].error {
+  outline: 2px solid red;
+  -moz-appearance: none; }
+.page-node-add-teenus form input[type="submit"],
+.page-node form input[type="submit"],
+.page-node-edit.node-type-teenus form input[type="submit"] {
+  display: block;
+  background: #0263A1;
+  color: #FFF;
+  text-shadow: none;
+  border: none;
+  border-radius: 0px;
+  font-size: 13px;
+  padding: 0px 15px;
+  max-width: 15%; }
+.page-node-add-teenus form #edit-preview,
+.page-node-add-teenus form #edit-preview-changes,
+.page-node-add-teenus form #edit-delete,
+.page-node-add-teenus form #edit-submit,
+.page-node form #edit-preview,
+.page-node form #edit-preview-changes,
+.page-node form #edit-delete,
+.page-node form #edit-submit,
+.page-node-edit.node-type-teenus form #edit-preview,
+.page-node-edit.node-type-teenus form #edit-preview-changes,
+.page-node-edit.node-type-teenus form #edit-delete,
+.page-node-edit.node-type-teenus form #edit-submit {
+  margin-right: 10px;
+  display: inline-block; }
+.page-node-add-teenus form textarea,
+.page-node form textarea,
+.page-node-edit.node-type-teenus form textarea {
+  border-color: #C9C6C6;
+  font-size: 13px;
+  padding: 5px; }
+html.js .page-node-add-teenus form .field-name-field-t-teenuse-aegumise-kp span, html.js
+.page-node form .field-name-field-t-teenuse-aegumise-kp span, html.js
+.page-node-edit.node-type-teenus form .field-name-field-t-teenuse-aegumise-kp span {
+  background: none;
+  padding-left: 0px;
+  color: #1C93CB;
+  font-size: 14px;
+  margin-bottom: 5px; }
+.page-node-add-teenus form .field-name-field-t-teenuse-aegumise-kp .date-padding,
+.page-node form .field-name-field-t-teenuse-aegumise-kp .date-padding,
+.page-node-edit.node-type-teenus form .field-name-field-t-teenuse-aegumise-kp .date-padding {
+  padding: 0px; }
+.page-node-add-teenus form tr.odd .form-item,
+.page-node-add-teenus form tr.even .form-item,
+.page-node form tr.odd .form-item,
+.page-node form tr.even .form-item,
+.page-node-edit.node-type-teenus form tr.odd .form-item,
+.page-node-edit.node-type-teenus form tr.even .form-item {
+  white-space: normal; }
+.page-node-add-teenus form .field-multiple-table,
+.page-node form .field-multiple-table,
+.page-node-edit.node-type-teenus form .field-multiple-table {
+  width: 100%; }
+  .page-node-add-teenus form .field-multiple-table legend,
+  .page-node form .field-multiple-table legend,
+  .page-node-edit.node-type-teenus form .field-multiple-table legend {
+    position: relative; }
+    html.js .page-node-add-teenus form .field-multiple-table legend > span, html.js
+    .page-node form .field-multiple-table legend > span, html.js
+    .page-node-edit.node-type-teenus form .field-multiple-table legend > span {
+      background: none;
+      padding-left: 20px; }
+    .page-node-add-teenus form .field-multiple-table legend a.fieldset-title,
+    .page-node form .field-multiple-table legend a.fieldset-title,
+    .page-node-edit.node-type-teenus form .field-multiple-table legend a.fieldset-title {
+      display: inline-block;
+      position: relative;
+      padding-left: 20px;
+      right: 20px;
+      color: #000;
+      font-weight: bold;
+      background: url(../img/collapsed.png) no-repeat 0px 2px; }
+  html.js .page-node-add-teenus form .field-multiple-table fieldset.collapsed, html.js
+  .page-node form .field-multiple-table fieldset.collapsed, html.js
+  .page-node-edit.node-type-teenus form .field-multiple-table fieldset.collapsed {
+    height: auto;
+    padding: 0px;
+    margin: 0px; }
+  .page-node-add-teenus form .field-multiple-table fieldset.collapsed legend > span a,
+  .page-node form .field-multiple-table fieldset.collapsed legend > span a,
+  .page-node-edit.node-type-teenus form .field-multiple-table fieldset.collapsed legend > span a {
+    background: url(../img/collapse.png) no-repeat 0px 2px; }
+  .page-node-add-teenus form .field-multiple-table td,
+  .page-node form .field-multiple-table td,
+  .page-node-edit.node-type-teenus form .field-multiple-table td {
+    vertical-align: top;
+    padding: 10px 0px;
+    white-space: initial; }
+  .page-node-add-teenus form .field-multiple-table > tbody > tr > td,
+  .page-node form .field-multiple-table > tbody > tr > td,
+  .page-node-edit.node-type-teenus form .field-multiple-table > tbody > tr > td {
+    padding: 15px; }
+  .page-node-add-teenus form .field-multiple-table input[type="submit"],
+  .page-node form .field-multiple-table input[type="submit"],
+  .page-node-edit.node-type-teenus form .field-multiple-table input[type="submit"] {
+    margin-left: 15px;
+    margin-bottom: 10px; }
+  .page-node-add-teenus form .field-multiple-table .field-multiple-table,
+  .page-node form .field-multiple-table .field-multiple-table,
+  .page-node-edit.node-type-teenus form .field-multiple-table .field-multiple-table {
+    margin-top: 15px; }
+    .page-node-add-teenus form .field-multiple-table .field-multiple-table input[type="submit"],
+    .page-node form .field-multiple-table .field-multiple-table input[type="submit"],
+    .page-node-edit.node-type-teenus form .field-multiple-table .field-multiple-table input[type="submit"] {
+      margin-left: 0px; }
+    .page-node-add-teenus form .field-multiple-table .field-multiple-table > thead > tr > th > label,
+    .page-node form .field-multiple-table .field-multiple-table > thead > tr > th > label,
+    .page-node-edit.node-type-teenus form .field-multiple-table .field-multiple-table > thead > tr > th > label {
+      padding-left: 15px; }
+    .page-node-add-teenus form .field-multiple-table .field-multiple-table > tbody > tr > td,
+    .page-node form .field-multiple-table .field-multiple-table > tbody > tr > td,
+    .page-node-edit.node-type-teenus form .field-multiple-table .field-multiple-table > tbody > tr > td {
+      padding-top: 0px; }
+      .page-node-add-teenus form .field-multiple-table .field-multiple-table > tbody > tr > td > fieldset,
+      .page-node form .field-multiple-table .field-multiple-table > tbody > tr > td > fieldset,
+      .page-node-edit.node-type-teenus form .field-multiple-table .field-multiple-table > tbody > tr > td > fieldset {
+        padding-bottom: 15px;
+        border-bottom: 1px solid #C9C6C6; }
+      .page-node-add-teenus form .field-multiple-table .field-multiple-table > tbody > tr > td .ajax-new-content fieldset,
+      .page-node form .field-multiple-table .field-multiple-table > tbody > tr > td .ajax-new-content fieldset,
+      .page-node-edit.node-type-teenus form .field-multiple-table .field-multiple-table > tbody > tr > td .ajax-new-content fieldset {
+        padding-bottom: 15px;
+        border-bottom: 1px solid #C9C6C6; }
+  .page-node-add-teenus form .field-multiple-table thead > tr th:last-of-type,
+  .page-node-add-teenus form .field-multiple-table .delta-order,
+  .page-node-add-teenus form .field-multiple-table .field-multiple-drag,
+  .page-node form .field-multiple-table thead > tr th:last-of-type,
+  .page-node form .field-multiple-table .delta-order,
+  .page-node form .field-multiple-table .field-multiple-drag,
+  .page-node-edit.node-type-teenus form .field-multiple-table thead > tr th:last-of-type,
+  .page-node-edit.node-type-teenus form .field-multiple-table .delta-order,
+  .page-node-edit.node-type-teenus form .field-multiple-table .field-multiple-drag {
+    display: none; }
+  .page-node-add-teenus form .field-multiple-table .handle,
+  .page-node form .field-multiple-table .handle,
+  .page-node-edit.node-type-teenus form .field-multiple-table .handle {
+    margin-left: 15px; }
+  .page-node-add-teenus form .field-multiple-table .draggable,
+  .page-node form .field-multiple-table .draggable,
+  .page-node-edit.node-type-teenus form .field-multiple-table .draggable {
+    background: #F0F0F0;
+    border: none; }
+  .page-node-add-teenus form .field-multiple-table .field-name-field-fcf-mootmise-kanal,
+  .page-node form .field-multiple-table .field-name-field-fcf-mootmise-kanal,
+  .page-node-edit.node-type-teenus form .field-multiple-table .field-name-field-fcf-mootmise-kanal {
+    /*input[type="submit"]:first-of-type {
+        margin: 10px 0px;
+        display: block;
+    }*/ }
+    .page-node-add-teenus form .field-multiple-table .field-name-field-fcf-mootmise-kanal .fieldset-wrapper .field-name-field-fcf-viide-teenusele,
+    .page-node form .field-multiple-table .field-name-field-fcf-mootmise-kanal .fieldset-wrapper .field-name-field-fcf-viide-teenusele,
+    .page-node-edit.node-type-teenus form .field-multiple-table .field-name-field-fcf-mootmise-kanal .fieldset-wrapper .field-name-field-fcf-viide-teenusele {
+      width: 400px;
+      margin-top: 10px; }
+    .page-node-add-teenus form .field-multiple-table .field-name-field-fcf-mootmise-kanal .fieldset-wrapper .field-name-field-fcf-kanal,
+    .page-node form .field-multiple-table .field-name-field-fcf-mootmise-kanal .fieldset-wrapper .field-name-field-fcf-kanal,
+    .page-node-edit.node-type-teenus form .field-multiple-table .field-name-field-fcf-mootmise-kanal .fieldset-wrapper .field-name-field-fcf-kanal {
+      width: auto; }
+    .page-node-add-teenus form .field-multiple-table .field-name-field-fcf-mootmise-kanal .fieldset-wrapper .field-name-field-fcf-ajakulu-klientidele,
+    .page-node form .field-multiple-table .field-name-field-fcf-mootmise-kanal .fieldset-wrapper .field-name-field-fcf-ajakulu-klientidele,
+    .page-node-edit.node-type-teenus form .field-multiple-table .field-name-field-fcf-mootmise-kanal .fieldset-wrapper .field-name-field-fcf-ajakulu-klientidele {
+      margin-right: 0px; }
+    .page-node-add-teenus form .field-multiple-table .field-name-field-fcf-mootmise-kanal .fieldset-wrapper > div,
+    .page-node form .field-multiple-table .field-name-field-fcf-mootmise-kanal .fieldset-wrapper > div,
+    .page-node-edit.node-type-teenus form .field-multiple-table .field-name-field-fcf-mootmise-kanal .fieldset-wrapper > div {
+      display: inline-block;
+      margin-right: 15px;
+      width: 140px; }
+      .page-node-add-teenus form .field-multiple-table .field-name-field-fcf-mootmise-kanal .fieldset-wrapper > div div,
+      .page-node form .field-multiple-table .field-name-field-fcf-mootmise-kanal .fieldset-wrapper > div div,
+      .page-node-edit.node-type-teenus form .field-multiple-table .field-name-field-fcf-mootmise-kanal .fieldset-wrapper > div div {
+        white-space: initial; }
+      .page-node-add-teenus form .field-multiple-table .field-name-field-fcf-mootmise-kanal .fieldset-wrapper > div .field-suffix,
+      .page-node form .field-multiple-table .field-name-field-fcf-mootmise-kanal .fieldset-wrapper > div .field-suffix,
+      .page-node-edit.node-type-teenus form .field-multiple-table .field-name-field-fcf-mootmise-kanal .fieldset-wrapper > div .field-suffix {
+        display: none; }
+      .page-node-add-teenus form .field-multiple-table .field-name-field-fcf-mootmise-kanal .fieldset-wrapper > div input,
+      .page-node form .field-multiple-table .field-name-field-fcf-mootmise-kanal .fieldset-wrapper > div input,
+      .page-node-edit.node-type-teenus form .field-multiple-table .field-name-field-fcf-mootmise-kanal .fieldset-wrapper > div input {
+        width: 100%; }
+.page-node-add-teenus .vertical-tabs,
+.page-node .vertical-tabs,
+.page-node-edit.node-type-teenus .vertical-tabs {
+  margin-top: 40px; }
+.page-node-add-teenus #freeze-height,
+.page-node #freeze-height,
+.page-node-edit.node-type-teenus #freeze-height {
+  height: auto !important; }
+
+html.js .node-type-teenus article fieldset {
+  height: auto;
+  margin-bottom: 30px; }
+.node-type-teenus article fieldset > legend {
+  position: relative; }
+  html.js .node-type-teenus article fieldset > legend > span.fieldset-legend {
+    padding-left: 20px;
+    background: none; }
+  .node-type-teenus article fieldset > legend > span.fieldset-legend > a {
+    display: inline-block;
+    position: relative;
+    padding-left: 25px;
+    right: 20px;
+    font-family: "Roboto Condensed", sans-serif;
+    font-size: 17px;
+    background: url(../img/collapsed.png) no-repeat 0px 1px; }
+.node-type-teenus article > div > fieldset.collapsed > legend > span.fieldset-legend > a {
+  background: url(../img/collapse.png) no-repeat 0px 1px; }
+.node-type-teenus article fieldset .fieldset-wrapper {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  font-size: 13px;
+  color: #666666; }
+  .node-type-teenus article fieldset .fieldset-wrapper a {
+    color: #666666; }
+.node-type-teenus article fieldset .field {
+  overflow: hidden;
+  margin-bottom: 10px; }
+  .node-type-teenus article fieldset .field .field-label,
+  .node-type-teenus article fieldset .field .field-items {
+    display: inline-block; }
+  .node-type-teenus article fieldset .field .field-items {
+    width: 80%; }
+.node-type-teenus article .field-label {
+  width: 165px;
+  color: #00668C;
+  font-size: 14px;
+  font-weight: normal; }
+.node-type-teenus article .field-collection-view {
+  margin: 0px;
+  border: none; }
+.node-type-teenus article .field-collection-view-links,
+.node-type-teenus article .action-links-field-collection-add {
+  display: none; }
+.node-type-teenus article .group-t-kanaalid .fieldset-wrapper {
+  margin-bottom: -30px; }
+.node-type-teenus article .group-t-kanaalid .field-name-field-c-mootmise-aasta .field-items {
+  width: 100%; }
+.node-type-teenus article .group-t-kanaalid .field-name-field-fcf-mootmise-aasta .field-label {
+  font-weight: bold; }
+.node-type-teenus article .group-t-kanaalid .field-name-field-fcf-mootmise-kanal .field-collection-view {
+  margin-left: 0px;
+  margin-right: 0px;
+  border: none; }
+.node-type-teenus article .group-t-kanaalid .field-name-field-fcf-mootmise-kanal .field-label {
+  white-space: nowrap; }
+.node-type-teenus article .group-t-kanaalid .field-name-field-fcf-mootmise-kanal .field {
+  float: left;
+  width: 174px;
+  min-height: 50px;
+  border: 1px solid #eee;
+  padding: 5px; }
+.node-type-teenus article .group-t-kanaalid .field-name-field-fcf-mootmise-kanal .field-name-field-fcf-viide-teenusele {
+  clear: both;
+  width: 98.7%; }
+
+.block-main-menu-sub-rt-menu .content {
+  background: url(../img/block-vp-search-tabs-shadow.png) no-repeat 50% 100%;
+  background-size: auto;
+  font-size: 30px;
+  line-height: 30px;
+  margin: 0;
+  padding-top: 0;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.18); }
+  .block-main-menu-sub-rt-menu .content .menu li.active {
+    background: url(../img/block-vp-search-tabs-arrow.png) no-repeat 50% 100%; }
+  .block-main-menu-sub-rt-menu .content .menu li.first {
+    padding-left: 2px;
+    background-position: 45% 100%; }
+  .block-main-menu-sub-rt-menu .content .menu li.last a {
+    position: relative;
+    top: 2px;
+    width: 101px;
+    font-size: 14px;
+    color: #bd4832;
+    background: url(../img/external.png) no-repeat 95% 41%; }
+    .block-main-menu-sub-rt-menu .content .menu li.last a::after {
+      display: none; }
+  .block-main-menu-sub-rt-menu .content .menu li {
+    float: left;
+    padding: 25px 32px 20px 32px; }
+    .block-main-menu-sub-rt-menu .content .menu li a {
+      display: inline-block;
+      margin-top: 3px;
+      color: #888;
+      font-family: "Roboto Condensed", sans-serif; }
+      .block-main-menu-sub-rt-menu .content .menu li a::after {
+        display: inline-block;
+        position: relative;
+        top: 5px;
+        left: 32px;
+        width: 1px;
+        height: 30px;
+        content: "";
+        background-color: #ccc; }
+    .block-main-menu-sub-rt-menu .content .menu li a:hover {
+      color: #00698C; }
+    .block-main-menu-sub-rt-menu .content .menu li a.active-trail {
+      color: #00698C; }
+
+.view-teenuste-otsing .views-exposed-widget {
+  float: none;
+  padding: 0px;
+  margin-bottom: 5px; }
+  .view-teenuste-otsing .views-exposed-widget .fieldset-wrapper {
+    margin: 10px 0px 10px 5px; }
+html.js .view-teenuste-otsing fieldset.collapsible.collapsed {
+  height: auto;
+  margin-bottom: 0px;
+  padding: 0px; }
+  html.js .view-teenuste-otsing fieldset.collapsible.collapsed .fieldset-legend {
+    background: url(../img/searchplus.png) no-repeat 0% 50%; }
+html.js .view-teenuste-otsing fieldset.collapsible {
+  margin: 0px;
+  padding: 0px; }
+  html.js .view-teenuste-otsing fieldset.collapsible .fieldset-legend {
+    background: url(../img/searchminus.png) no-repeat 0% 50%; }
+  html.js .view-teenuste-otsing fieldset.collapsible a:hover {
+    color: #bd4832; }
+  html.js .view-teenuste-otsing fieldset.collapsible a:focus {
+    color: #bd4832; }
+.view-teenuste-otsing .form-type-textfield {
+  border-radius: 3px;
+  border: 1px solid #D6D4D0;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  display: block;
+  padding: 4px; }
+  .view-teenuste-otsing .form-type-textfield input {
+    background: #fff;
+    border: 1px solid #D6D6D6;
+    box-shadow: none;
+    height: 25px;
+    padding: 0 5px;
+    width: 200px; }
+.view-teenuste-otsing .select2-container {
+  width: 210px !important; }
+  .view-teenuste-otsing .select2-container span.select2-selection {
+    border-radius: 3px;
+    border: 1px solid #D6D4D0;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    display: block;
+    padding: 4px; }
+    .view-teenuste-otsing .select2-container span.select2-selection ul {
+      padding: 0px; }
+    .view-teenuste-otsing .select2-container span.select2-selection li.select2-selection__choice {
+      margin-top: 7px; }
+.view-teenuste-otsing .fieldset-title {
+  font-family: "Roboto Condensed", sans-serif;
+  font-size: 17px;
+  margin-bottom: 4px; }
+.view-teenuste-otsing .form-checkboxes input {
+  position: relative;
+  vertical-align: top;
+  top: 3px; }
+.view-teenuste-otsing .form-checkboxes label.option {
+  display: inline-block;
+  width: 180px;
+  font-weight: normal;
+  color: #000;
+  font-size: 12px;
+  line-height: 17px; }
+.view-teenuste-otsing select {
+  border-radius: 3px;
+  border: 1px solid #D6D4D0;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  display: block;
+  padding: 4px;
+  height: 32px; }
+.view-teenuste-otsing .views-submit-button {
+  margin-top: 13px;
+  margin-bottom: 0px; }
+.view-teenuste-otsing #edit-submit-teenuste-otsing,
+.view-teenuste-otsing .go-to-service-catalog-wrapper a {
+  -webkit-appearance: none;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding;
+  background-clip: padding-box;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  border-radius: 6px;
+  background: #0085b1;
+  background: -moz-linear-gradient(top, #0085b1 0%, #006a8e 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #0085b1), color-stop(100%, #006a8e));
+  background: linear-gradient(to bottom, #0085b1 0%, #006a8e 100%);
+  display: inline-block;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0085b1', endColorstr='#006a8e', GradientType=0);
+  border: 0;
+  box-shadow: inset 0 2px 1px 0 rgba(255, 255, 255, 0.13), inset 0 -2px 1px 0 rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  color: #fff;
+  font: 14px/20px "Roboto Condensed", sans-serif;
+  height: 17px;
+  line-height: 17px;
+  margin: 0 10px 0 0;
+  overflow: visible;
+  padding: 5px 15px;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+  width: auto; }
+  .view-teenuste-otsing #edit-submit-teenuste-otsing:hover,
+  .view-teenuste-otsing .go-to-service-catalog-wrapper a:hover {
+    background: #0085b2;
+    /* Old browsers */
+    background: -moz-linear-gradient(top, #0085b2 0%, #0085b2 26%, #007ca5 100%);
+    /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #0085b2), color-stop(26%, #0085b2), color-stop(100%, #007ca5));
+    /* Chrome,Safari4+ */
+    background: linear-gradient(to bottom, #0085b2 0%, #0085b2 26%, #007ca5 100%);
+    /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0085b2', endColorstr='#007ca5', GradientType=0);
+    /* IE6-9 */
+    box-shadow: inset 0 2px 1px 0 rgba(255, 255, 255, 0.13), inset 0 -2px 1px 0 rgba(0, 0, 0, 0.2), 0 0 8px rgba(0, 0, 0, 0.22); }
+.view-teenuste-otsing .views-reset-button {
+  margin-top: 18px;
+  margin-bottom: 0px;
+  margin-left: 3px; }
+  .view-teenuste-otsing .views-reset-button #edit-reset {
+    background: none;
+    border: none;
+    border-bottom: 1px solid;
+    border-radius: 0px;
+    padding: 0px 2px;
+    margin-top: 0px;
+    text-shadow: none;
+    box-shadow: none;
+    color: #bd4832;
+    font-family: "Roboto Condensed", sans-serif;
+    font-weight: normal;
+    font-size: 14px; }
+.view-teenuste-otsing .views-summary {
+  display: inline-block;
+  width: 24px;
+  margin-left: 5px;
+  margin-bottom: 5px;
+  text-align: center;
+  box-shadow: inset -1px -1px 2px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  color: #00698c;
+  border-width: 1px;
+  border-bottom-color: #979797;
+  border-left-color: #c4c6c3;
+  border-right-color: #979797;
+  border-style: solid;
+  border-top-color: #c4c6c3;
+  padding: 1px 0px; }
+.view-teenuste-otsing .disabled-letter {
+  color: #c9c9c9;
+  background-color: #fafafa; }
+.view-teenuste-otsing .chosen-letter {
+  border-color: transparent;
+  background-color: #bd4932; }
+  .view-teenuste-otsing .chosen-letter a {
+    color: #fff; }
+    .view-teenuste-otsing .chosen-letter a:hover {
+      color: #fff; }
+.view-teenuste-otsing .views-summary.show-all-letters {
+  width: 67px; }
+.view-teenuste-otsing .service-statistic table tbody tr {
+  background: none; }
+  .view-teenuste-otsing .service-statistic table tbody tr td {
+    border: 1px solid #F0F0F0;
+    text-align: center;
+    font-size: 11px; }
+.view-teenuste-otsing .service-statistic table thead tr th {
+  color: #00668C;
+  padding: 0px 10px;
+  text-align: center;
+  font-size: 11px;
+  border-bottom: 0px; }
+.view-teenuste-otsing .view-filters {
+  float: left;
+  position: relative;
+  padding: 15px 20px 16px 20px;
+  width: 210px;
+  background-color: #f5f4ef; }
+  .view-teenuste-otsing .view-filters #edit-field-t-allasutuse-reference-tid-wrapper {
+    margin-top: 10px; }
+  .view-teenuste-otsing .view-filters #edit-field-t-sihtgrupp-value-wrapper {
+    margin-top: 20px; }
+  .view-teenuste-otsing .view-filters #edit-field-t-allasutuse-reference-tid {
+    display: none; }
+  .view-teenuste-otsing .view-filters .views-widget-sort-by {
+    overflow: hidden;
+    width: 210px;
+    margin: 20px 0px 15px 0px; }
+    .view-teenuste-otsing .view-filters .views-widget-sort-by select {
+      width: 100%; }
+    .view-teenuste-otsing .view-filters .views-widget-sort-by .form-item label {
+      font-weight: bold;
+      color: #000;
+      font-size: 12px; }
+  .view-teenuste-otsing .view-filters .views-submit-button,
+  .view-teenuste-otsing .view-filters .views-reset-button {
+    float: left; }
+  .view-teenuste-otsing .view-filters .select2-search__field {
+    padding: 0px 0px 0px 5px;
+    box-shadow: none;
+    height: auto; }
+.view-teenuste-otsing .search-container {
+  float: left;
+  width: 650px;
+  margin-left: 30px; }
+  .view-teenuste-otsing .search-container > div:nth-of-type(2) {
+    margin-top: 30px; }
+    .view-teenuste-otsing .search-container > div:nth-of-type(2) > div {
+      border-bottom: 1px dashed #ccc;
+      margin: 0 0 24px 0;
+      padding: 0 0 24px 0; }
+      .view-teenuste-otsing .search-container > div:nth-of-type(2) > div > span {
+        display: block;
+        float: left;
+        color: #666666;
+        margin-right: 13px;
+        font-weight: bold;
+        font-size: 13px;
+        font-family: "Roboto Condensed", sans-serif;
+        white-space: normal; }
+  .view-teenuste-otsing .search-container h2.views-field-title {
+    font-size: 17px; }
+    .view-teenuste-otsing .search-container h2.views-field-title::after {
+      display: inline-block;
+      width: 16px;
+      height: 12px;
+      content: "";
+      background: url(../img/external.png) no-repeat 95% 41%; }
+  .logged-in .view-teenuste-otsing .search-container > div:nth-of-type(3) {
+    margin-top: 30px; }
+    .logged-in .view-teenuste-otsing .search-container > div:nth-of-type(3) > div {
+      border-bottom: 1px dashed #ccc;
+      margin: 0 0 24px 0;
+      padding: 0 0 24px 0; }
+      .logged-in .view-teenuste-otsing .search-container > div:nth-of-type(3) > div > span {
+        display: block;
+        float: left;
+        color: #666666;
+        margin-right: 13px;
+        font-weight: bold;
+        font-size: 13px;
+        font-family: "Roboto Condensed", sans-serif;
+        white-space: normal; }
+  .view-teenuste-otsing .search-container .go-to-service-catalog-wrapper {
+    border: 1px dashed #ccc;
+    padding: 30px;
+    text-align: center; }
+  .view-teenuste-otsing .search-container .service-conditions,
+  .view-teenuste-otsing .search-container .service-statistic,
+  .view-teenuste-otsing .search-container .views-field-field-t-regulatsioon {
+    cursor: pointer;
+    text-decoration: underline; }
+    .view-teenuste-otsing .search-container .service-conditions .field-content,
+    .view-teenuste-otsing .search-container .service-statistic .field-content,
+    .view-teenuste-otsing .search-container .views-field-field-t-regulatsioon .field-content {
+      display: none;
+      position: absolute;
+      max-width: 395px;
+      min-width: 200px;
+      border: 1px solid #ccc;
+      z-index: 1;
+      background-color: #fff;
+      padding: 20px;
+      -webkit-box-shadow: 5px 13px 11px -13px rgba(0, 0, 0, 0.75);
+      -moz-box-shadow: 5px 13px 11px -13px rgba(0, 0, 0, 0.75);
+      box-shadow: 5px 13px 11px -13px rgba(0, 0, 0, 0.75); }
+      .view-teenuste-otsing .search-container .service-conditions .field-content ul, .view-teenuste-otsing .search-container .service-conditions .field-content li,
+      .view-teenuste-otsing .search-container .service-statistic .field-content ul,
+      .view-teenuste-otsing .search-container .service-statistic .field-content li,
+      .view-teenuste-otsing .search-container .views-field-field-t-regulatsioon .field-content ul,
+      .view-teenuste-otsing .search-container .views-field-field-t-regulatsioon .field-content li {
+        margin: 0px; }
+    .view-teenuste-otsing .search-container .service-conditions .views-label:hover,
+    .view-teenuste-otsing .search-container .service-statistic .views-label:hover,
+    .view-teenuste-otsing .search-container .views-field-field-t-regulatsioon .views-label:hover {
+      color: #bd4832; }
+  .view-teenuste-otsing .search-container .service-conditions,
+  .view-teenuste-otsing .search-container .service-statistic,
+  .view-teenuste-otsing .search-container .views-field-field-t-regulatsioon,
+  .view-teenuste-otsing .search-container .views-field-field-t-teenuse-aegumise-kp,
+  .view-teenuste-otsing .search-container .views-field-field-t-makse,
+  .view-teenuste-otsing .search-container .views-field-field-t-teenuse-seisund,
+  .view-teenuste-otsing .search-container .views-field-view-node {
+    float: left;
+    margin-right: 10px;
+    font-size: 10px; }
+    .view-teenuste-otsing .search-container .service-conditions span .field-content,
+    .view-teenuste-otsing .search-container .service-statistic span .field-content,
+    .view-teenuste-otsing .search-container .views-field-field-t-regulatsioon span .field-content,
+    .view-teenuste-otsing .search-container .views-field-field-t-teenuse-aegumise-kp span .field-content,
+    .view-teenuste-otsing .search-container .views-field-field-t-makse span .field-content,
+    .view-teenuste-otsing .search-container .views-field-field-t-teenuse-seisund span .field-content,
+    .view-teenuste-otsing .search-container .views-field-view-node span .field-content {
+      border: none;
+      padding: 0px;
+      width: auto;
+      position: static; }
+  .view-teenuste-otsing .search-container .views-field-view-node a {
+    text-decoration: underline; }
+  .view-teenuste-otsing .search-container .views-field-field-t-teenuse-aegumise-kp,
+  .view-teenuste-otsing .search-container .views-field-field-t-makse,
+  .view-teenuste-otsing .search-container .views-field-field-t-teenuse-seisund {
+    background-color: #FF9900;
+    border-radius: 4px;
+    color: #fff;
+    padding: 0 3px; }
+    .view-teenuste-otsing .search-container .views-field-field-t-teenuse-aegumise-kp div.field-content,
+    .view-teenuste-otsing .search-container .views-field-field-t-makse div.field-content,
+    .view-teenuste-otsing .search-container .views-field-field-t-teenuse-seisund div.field-content {
+      display: inline-block; }
+    .view-teenuste-otsing .search-container .views-field-field-t-teenuse-aegumise-kp a,
+    .view-teenuste-otsing .search-container .views-field-field-t-makse a,
+    .view-teenuste-otsing .search-container .views-field-field-t-teenuse-seisund a {
+      text-decoration: underline;
+      color: #fff; }
+  .view-teenuste-otsing .search-container .clear-me {
+    clear: both; }
+  .view-teenuste-otsing .search-container .views-field-field-t-kirjeldus {
+    padding: 5px 0px; }
+  .view-teenuste-otsing .search-container .views-field-field-t-regulatsioon a {
+    display: block;
+    word-break: break-all; }
+  .view-teenuste-otsing .search-container .container-open .views-label {
+    color: #bd4832; }
+  .view-teenuste-otsing .search-container .empty {
+    cursor: default;
+    padding: 0; }
+    .view-teenuste-otsing .search-container .empty span:hover {
+      color: #333333 !Important; }
+  .view-teenuste-otsing .search-container .no-result-found {
+    font-family: "Roboto Condensed", sans-serif;
+    font-size: 14px;
+    text-align: center; }
+    .view-teenuste-otsing .search-container .no-result-found a {
+      display: block;
+      border-bottom: 1px solid;
+      width: 100px;
+      margin: 0 auto; }
+
+.view-teenuste-otsing .view-description-text,
+.view-teenuste-statistika .view-description-text,
+.view-valitsuse-teenuste-statistika .view-description-text,
+.view-ministeeriumi-teenuste-statistika .view-description-text {
+  padding: 10px;
+  margin-bottom: 20px;
+  color: #00668C;
+  border: 1px dashed #ccc;
+  font-family: "Roboto Condensed", sans-serif;
+  font-size: 14px; }
+
+.view-teenuste-statistika h1.statistics-page-title,
+.view-valitsuse-teenuste-statistika h1.statistics-page-title,
+.view-ministeeriumi-teenuste-statistika h1.statistics-page-title {
+  text-shadow: none;
+  margin-bottom: 40px; }
+.view-teenuste-statistika h2.statistic-page-sub-title,
+.view-valitsuse-teenuste-statistika h2.statistic-page-sub-title,
+.view-ministeeriumi-teenuste-statistika h2.statistic-page-sub-title {
+  margin-bottom: 20px;
+  float: left;
+  font-size: 28px;
+  text-shadow: none;
+  font-weight: 300; }
+.view-teenuste-statistika .views-table.cols-2 .view-filters,
+.view-valitsuse-teenuste-statistika .views-table.cols-2 .view-filters,
+.view-ministeeriumi-teenuste-statistika .views-table.cols-2 .view-filters {
+  display: none; }
+.view-teenuste-statistika table,
+.view-valitsuse-teenuste-statistika table,
+.view-ministeeriumi-teenuste-statistika table {
+  width: 100%; }
+  .view-teenuste-statistika table thead tr th,
+  .view-valitsuse-teenuste-statistika table thead tr th,
+  .view-ministeeriumi-teenuste-statistika table thead tr th {
+    border-bottom: none; }
+  .view-teenuste-statistika table tbody,
+  .view-valitsuse-teenuste-statistika table tbody,
+  .view-ministeeriumi-teenuste-statistika table tbody {
+    border-bottom: 0px;
+    border-top: 0px; }
+.view-teenuste-statistika .statistic-sevice-name,
+.view-valitsuse-teenuste-statistika .statistic-sevice-name,
+.view-ministeeriumi-teenuste-statistika .statistic-sevice-name {
+  cursor: pointer;
+  vertical-align: top;
+  width: 40px; }
+  .view-teenuste-statistika .statistic-sevice-name div,
+  .view-valitsuse-teenuste-statistika .statistic-sevice-name div,
+  .view-ministeeriumi-teenuste-statistika .statistic-sevice-name div {
+    position: absolute;
+    background: url(../img/collapse.png) no-repeat 14px 16px #F0F0F0;
+    padding-left: 42px;
+    padding-top: 14px;
+    padding-bottom: 13px;
+    font-weight: bold; }
+.view-teenuste-statistika .statistic-sevice-name.collapsed div,
+.view-valitsuse-teenuste-statistika .statistic-sevice-name.collapsed div,
+.view-ministeeriumi-teenuste-statistika .statistic-sevice-name.collapsed div {
+  background: url(../img/collapsed.png) no-repeat 14px 16px #F0F0F0;
+  padding-top: 14px; }
+.view-teenuste-statistika .statistic-sevice-name.tworows > div,
+.view-valitsuse-teenuste-statistika .statistic-sevice-name.tworows > div,
+.view-ministeeriumi-teenuste-statistika .statistic-sevice-name.tworows > div {
+  width: 314px;
+  padding-top: 9px;
+  padding-bottom: 8px;
+  line-height: 15px; }
+.view-teenuste-statistika .statistic-sevice-name.tworows.threerows > div,
+.view-valitsuse-teenuste-statistika .statistic-sevice-name.tworows.threerows > div,
+.view-ministeeriumi-teenuste-statistika .statistic-sevice-name.tworows.threerows > div {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  line-height: 13px; }
+.view-teenuste-statistika .view-filters,
+.view-valitsuse-teenuste-statistika .view-filters,
+.view-ministeeriumi-teenuste-statistika .view-filters {
+  float: right; }
+  .view-teenuste-statistika .view-filters #edit-field-fcf-mootmise-aasta-tid-wrapper,
+  .view-teenuste-statistika .view-filters .views-submit-button,
+  .view-valitsuse-teenuste-statistika .view-filters #edit-field-fcf-mootmise-aasta-tid-wrapper,
+  .view-valitsuse-teenuste-statistika .view-filters .views-submit-button,
+  .view-ministeeriumi-teenuste-statistika .view-filters #edit-field-fcf-mootmise-aasta-tid-wrapper,
+  .view-ministeeriumi-teenuste-statistika .view-filters .views-submit-button {
+    padding-right: 0px; }
+  .view-teenuste-statistika .view-filters .views-widget,
+  .view-valitsuse-teenuste-statistika .view-filters .views-widget,
+  .view-ministeeriumi-teenuste-statistika .view-filters .views-widget {
+    width: 115px;
+    display: inline-block; }
+    .view-teenuste-statistika .view-filters .views-widget select,
+    .view-valitsuse-teenuste-statistika .view-filters .views-widget select,
+    .view-ministeeriumi-teenuste-statistika .view-filters .views-widget select {
+      width: 100%;
+      height: 24px;
+      line-height: 13px;
+      border: 1px solid #ccc; }
+  .view-teenuste-statistika .view-filters label,
+  .view-valitsuse-teenuste-statistika .view-filters label,
+  .view-ministeeriumi-teenuste-statistika .view-filters label {
+    font-weight: normal;
+    display: inline-block;
+    padding-right: 10px; }
+.view-teenuste-statistika div.views-field-name, .view-teenuste-statistika div.views-field-name-i18n,
+.view-valitsuse-teenuste-statistika div.views-field-name,
+.view-valitsuse-teenuste-statistika div.views-field-name-i18n,
+.view-ministeeriumi-teenuste-statistika div.views-field-name,
+.view-ministeeriumi-teenuste-statistika div.views-field-name-i18n {
+  font-weight: bold;
+  background: url(../img/collapse.png) no-repeat 14px 2px;
+  padding-left: 42px;
+  top: 37px;
+  cursor: pointer; }
+.view-teenuste-statistika div.views-field-name.collapsed, .view-teenuste-statistika div.views-field-name-i18n.collapsed,
+.view-valitsuse-teenuste-statistika div.views-field-name.collapsed,
+.view-valitsuse-teenuste-statistika div.views-field-name-i18n.collapsed,
+.view-ministeeriumi-teenuste-statistika div.views-field-name.collapsed,
+.view-ministeeriumi-teenuste-statistika div.views-field-name-i18n.collapsed {
+  background: url(../img/collapsed.png) no-repeat 14px 2px; }
+.content .view-teenuste-statistika > div:nth-of-type(3), .content
+.view-valitsuse-teenuste-statistika > div:nth-of-type(3), .content
+.view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) {
+  padding-left: 40px; }
+  .content .view-teenuste-statistika > div:nth-of-type(3) .views-field-name, .content .view-teenuste-statistika > div:nth-of-type(3) .views-field-name-i18n, .content
+  .view-valitsuse-teenuste-statistika > div:nth-of-type(3) .views-field-name, .content
+  .view-valitsuse-teenuste-statistika > div:nth-of-type(3) .views-field-name-i18n, .content
+  .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) .views-field-name, .content
+  .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) .views-field-name-i18n {
+    width: 289px; }
+  .content .view-teenuste-statistika > div:nth-of-type(3) table table thead tr:first-of-type th, .content
+  .view-valitsuse-teenuste-statistika > div:nth-of-type(3) table table thead tr:first-of-type th, .content
+  .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) table table thead tr:first-of-type th {
+    font-size: 10px;
+    padding: 2px 0px 0px 0px; }
+  .content .view-teenuste-statistika > div:nth-of-type(3) table tbody tr .views-field-name, .content .view-teenuste-statistika > div:nth-of-type(3) table tbody tr .views-field-name-i18n, .content
+  .view-valitsuse-teenuste-statistika > div:nth-of-type(3) table tbody tr .views-field-name, .content
+  .view-valitsuse-teenuste-statistika > div:nth-of-type(3) table tbody tr .views-field-name-i18n, .content
+  .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) table tbody tr .views-field-name, .content
+  .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) table tbody tr .views-field-name-i18n {
+    font-weight: normal; }
+  .content .view-teenuste-statistika > div:nth-of-type(3) .padding-adjustment th, .content
+  .view-valitsuse-teenuste-statistika > div:nth-of-type(3) .padding-adjustment th, .content
+  .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) .padding-adjustment th {
+    padding-top: 1px;
+    padding-bottom: 3px; }
+.content .view-teenuste-statistika .view-footer .view-kanaalite-statistika .view-content, .content
+.view-valitsuse-teenuste-statistika .view-footer .view-kanaalite-statistika .view-content, .content
+.view-ministeeriumi-teenuste-statistika .view-footer .view-kanaalite-statistika .view-content {
+  margin-top: 0px;
+  padding-left: 40px;
+  font-weight: bold; }
+.content .view-teenuste-statistika .view-footer .view-kanaalite-statistika table, .content
+.view-valitsuse-teenuste-statistika .view-footer .view-kanaalite-statistika table, .content
+.view-ministeeriumi-teenuste-statistika .view-footer .view-kanaalite-statistika table {
+  background: #F6F5F7; }
+  .content .view-teenuste-statistika .view-footer .view-kanaalite-statistika table tbody tr td, .content
+  .view-valitsuse-teenuste-statistika .view-footer .view-kanaalite-statistika table tbody tr td, .content
+  .view-ministeeriumi-teenuste-statistika .view-footer .view-kanaalite-statistika table tbody tr td {
+    border-color: #F6F5F7; }
+.content .view-teenuste-statistika .view-footer .view-kanaalite-statistika .views-field-nothing, .content
+.view-valitsuse-teenuste-statistika .view-footer .view-kanaalite-statistika .views-field-nothing, .content
+.view-ministeeriumi-teenuste-statistika .view-footer .view-kanaalite-statistika .views-field-nothing {
+  width: 334px;
+  text-align: left; }
+.content .view-teenuste-statistika .view-footer .view-kanaalite-statistika .views-field-field-fcf-osutamiste-arv, .content
+.view-valitsuse-teenuste-statistika .view-footer .view-kanaalite-statistika .views-field-field-fcf-osutamiste-arv, .content
+.view-ministeeriumi-teenuste-statistika .view-footer .view-kanaalite-statistika .views-field-field-fcf-osutamiste-arv {
+  width: 105px; }
+.content .view-teenuste-statistika .view-footer .view-kanaalite-statistika .views-field-field-fcf-aasta-rahulolu, .content
+.view-valitsuse-teenuste-statistika .view-footer .view-kanaalite-statistika .views-field-field-fcf-aasta-rahulolu, .content
+.view-ministeeriumi-teenuste-statistika .view-footer .view-kanaalite-statistika .views-field-field-fcf-aasta-rahulolu {
+  width: 105px; }
+.content .view-teenuste-statistika .view-footer .view-kanaalite-statistika .views-field-field-fcf-aasta-halduskulu, .content
+.view-valitsuse-teenuste-statistika .view-footer .view-kanaalite-statistika .views-field-field-fcf-aasta-halduskulu, .content
+.view-ministeeriumi-teenuste-statistika .view-footer .view-kanaalite-statistika .views-field-field-fcf-aasta-halduskulu {
+  width: 105px; }
+.content .view-teenuste-statistika .view-footer .view-kanaalite-statistika .views-field-field-fcf-ajakulu-klientidele, .content
+.view-valitsuse-teenuste-statistika .view-footer .view-kanaalite-statistika .views-field-field-fcf-ajakulu-klientidele, .content
+.view-ministeeriumi-teenuste-statistika .view-footer .view-kanaalite-statistika .views-field-field-fcf-ajakulu-klientidele {
+  width: 134px; }
+.content .view-teenuste-statistika div:nth-of-type(2) .view-kanaalite-statistika, .content
+.view-valitsuse-teenuste-statistika div:nth-of-type(2) .view-kanaalite-statistika, .content
+.view-ministeeriumi-teenuste-statistika div:nth-of-type(2) .view-kanaalite-statistika {
+  padding-left: 40px; }
+.view-teenuste-statistika .statistic-page-channels-block,
+.view-valitsuse-teenuste-statistika .statistic-page-channels-block,
+.view-ministeeriumi-teenuste-statistika .statistic-page-channels-block {
+  clear: both;
+  padding: 15px;
+  margin-bottom: 2px;
+  background: #F0F0F0; }
+  .view-teenuste-statistika .statistic-page-channels-block h3,
+  .view-valitsuse-teenuste-statistika .statistic-page-channels-block h3,
+  .view-ministeeriumi-teenuste-statistika .statistic-page-channels-block h3 {
+    text-shadow: none;
+    color: #00668C;
+    cursor: pointer;
+    background: url(../img/collapse.png) no-repeat 0px 2px;
+    padding-left: 28px; }
+  .view-teenuste-statistika .statistic-page-channels-block h3.collapsed,
+  .view-valitsuse-teenuste-statistika .statistic-page-channels-block h3.collapsed,
+  .view-ministeeriumi-teenuste-statistika .statistic-page-channels-block h3.collapsed {
+    background: url(../img/collapsed.png) no-repeat 0px 2px; }
+.view-teenuste-statistika .view-display-id-teenuste_arv_kokku,
+.view-valitsuse-teenuste-statistika .view-display-id-teenuste_arv_kokku,
+.view-ministeeriumi-teenuste-statistika .view-display-id-teenuste_arv_kokku {
+  float: left; }
+  .view-teenuste-statistika .view-display-id-teenuste_arv_kokku .view-filters,
+  .view-valitsuse-teenuste-statistika .view-display-id-teenuste_arv_kokku .view-filters,
+  .view-ministeeriumi-teenuste-statistika .view-display-id-teenuste_arv_kokku .view-filters {
+    display: none; }
+  .view-teenuste-statistika .view-display-id-teenuste_arv_kokku .view-content,
+  .view-valitsuse-teenuste-statistika .view-display-id-teenuste_arv_kokku .view-content,
+  .view-ministeeriumi-teenuste-statistika .view-display-id-teenuste_arv_kokku .view-content {
+    margin-top: 7px;
+    margin-left: 10px; }
+  .view-teenuste-statistika .view-display-id-teenuste_arv_kokku table tbody tr,
+  .view-valitsuse-teenuste-statistika .view-display-id-teenuste_arv_kokku table tbody tr,
+  .view-ministeeriumi-teenuste-statistika .view-display-id-teenuste_arv_kokku table tbody tr {
+    background-color: #00668C;
+    border: none; }
+    .view-teenuste-statistika .view-display-id-teenuste_arv_kokku table tbody tr td,
+    .view-valitsuse-teenuste-statistika .view-display-id-teenuste_arv_kokku table tbody tr td,
+    .view-ministeeriumi-teenuste-statistika .view-display-id-teenuste_arv_kokku table tbody tr td {
+      padding: 0px 6px;
+      color: #fff;
+      border-radius: 4px; }
+.view-teenuste-statistika .view-kanaalite-statistika .view-filters,
+.view-valitsuse-teenuste-statistika .view-kanaalite-statistika .view-filters,
+.view-ministeeriumi-teenuste-statistika .view-kanaalite-statistika .view-filters {
+  display: none; }
+.view-teenuste-statistika .view-kanaalite-statistika .yellow-td,
+.view-valitsuse-teenuste-statistika .view-kanaalite-statistika .yellow-td,
+.view-ministeeriumi-teenuste-statistika .view-kanaalite-statistika .yellow-td {
+  background-color: #EA9B45;
+  color: #fff; }
+.view-teenuste-statistika .view-kanaalite-statistika .green-td,
+.view-valitsuse-teenuste-statistika .view-kanaalite-statistika .green-td,
+.view-ministeeriumi-teenuste-statistika .view-kanaalite-statistika .green-td {
+  background-color: #89B14E;
+  color: #fff; }
+.view-teenuste-statistika .view-kanaalite-statistika .red-td,
+.view-valitsuse-teenuste-statistika .view-kanaalite-statistika .red-td,
+.view-ministeeriumi-teenuste-statistika .view-kanaalite-statistika .red-td {
+  background-color: #C04E37;
+  color: #fff; }
+.view-teenuste-statistika .view-kanaalite-statistika table,
+.view-valitsuse-teenuste-statistika .view-kanaalite-statistika table,
+.view-ministeeriumi-teenuste-statistika .view-kanaalite-statistika table {
+  width: 100%; }
+  .view-teenuste-statistika .view-kanaalite-statistika table thead,
+  .view-valitsuse-teenuste-statistika .view-kanaalite-statistika table thead,
+  .view-ministeeriumi-teenuste-statistika .view-kanaalite-statistika table thead {
+    background-color: #F0F0F0; }
+    .view-teenuste-statistika .view-kanaalite-statistika table thead tr.show-titles th,
+    .view-valitsuse-teenuste-statistika .view-kanaalite-statistika table thead tr.show-titles th,
+    .view-ministeeriumi-teenuste-statistika .view-kanaalite-statistika table thead tr.show-titles th {
+      color: #197FAF; }
+    .view-teenuste-statistika .view-kanaalite-statistika table thead th,
+    .view-valitsuse-teenuste-statistika .view-kanaalite-statistika table thead th,
+    .view-ministeeriumi-teenuste-statistika .view-kanaalite-statistika table thead th {
+      font-size: 13px;
+      vertical-align: middle;
+      padding: 13px;
+      text-align: center; }
+    .view-teenuste-statistika .view-kanaalite-statistika table thead .views-field-name, .view-teenuste-statistika .view-kanaalite-statistika table thead .views-field-name-i18n,
+    .view-valitsuse-teenuste-statistika .view-kanaalite-statistika table thead .views-field-name,
+    .view-valitsuse-teenuste-statistika .view-kanaalite-statistika table thead .views-field-name-i18n,
+    .view-ministeeriumi-teenuste-statistika .view-kanaalite-statistika table thead .views-field-name,
+    .view-ministeeriumi-teenuste-statistika .view-kanaalite-statistika table thead .views-field-name-i18n {
+      text-align: left;
+      width: 330px; }
+    .view-teenuste-statistika .view-kanaalite-statistika table thead .views-field-field-fcf-osutamiste-arv,
+    .view-valitsuse-teenuste-statistika .view-kanaalite-statistika table thead .views-field-field-fcf-osutamiste-arv,
+    .view-ministeeriumi-teenuste-statistika .view-kanaalite-statistika table thead .views-field-field-fcf-osutamiste-arv {
+      width: 100px; }
+    .view-teenuste-statistika .view-kanaalite-statistika table thead .views-field-field-fcf-aasta-rahulolu,
+    .view-valitsuse-teenuste-statistika .view-kanaalite-statistika table thead .views-field-field-fcf-aasta-rahulolu,
+    .view-ministeeriumi-teenuste-statistika .view-kanaalite-statistika table thead .views-field-field-fcf-aasta-rahulolu {
+      width: 100px; }
+    .view-teenuste-statistika .view-kanaalite-statistika table thead .views-field-field-fcf-aasta-halduskulu,
+    .view-valitsuse-teenuste-statistika .view-kanaalite-statistika table thead .views-field-field-fcf-aasta-halduskulu,
+    .view-ministeeriumi-teenuste-statistika .view-kanaalite-statistika table thead .views-field-field-fcf-aasta-halduskulu {
+      width: 100px; }
+    .view-teenuste-statistika .view-kanaalite-statistika table thead .views-field-field-fcf-ajakulu-klientidele,
+    .view-valitsuse-teenuste-statistika .view-kanaalite-statistika table thead .views-field-field-fcf-ajakulu-klientidele,
+    .view-ministeeriumi-teenuste-statistika .view-kanaalite-statistika table thead .views-field-field-fcf-ajakulu-klientidele {
+      width: 130px;
+      border-right: 1px solid #F0F0F0; }
+  .view-teenuste-statistika .view-kanaalite-statistika table tbody tr td,
+  .view-valitsuse-teenuste-statistika .view-kanaalite-statistika table tbody tr td,
+  .view-ministeeriumi-teenuste-statistika .view-kanaalite-statistika table tbody tr td {
+    border: 1px solid #F0F0F0;
+    padding: 10px;
+    text-align: center; }
+  .view-teenuste-statistika .view-kanaalite-statistika table tbody tr .views-field-name, .view-teenuste-statistika .view-kanaalite-statistika table tbody tr .views-field-name-18n,
+  .view-valitsuse-teenuste-statistika .view-kanaalite-statistika table tbody tr .views-field-name,
+  .view-valitsuse-teenuste-statistika .view-kanaalite-statistika table tbody tr .views-field-name-18n,
+  .view-ministeeriumi-teenuste-statistika .view-kanaalite-statistika table tbody tr .views-field-name,
+  .view-ministeeriumi-teenuste-statistika .view-kanaalite-statistika table tbody tr .views-field-name-18n {
+    font-weight: bold;
+    text-align: left; }
+  .view-teenuste-statistika .view-kanaalite-statistika table tfoot,
+  .view-valitsuse-teenuste-statistika .view-kanaalite-statistika table tfoot,
+  .view-ministeeriumi-teenuste-statistika .view-kanaalite-statistika table tfoot {
+    background: #F6F5F7; }
+    .view-teenuste-statistika .view-kanaalite-statistika table tfoot tr th,
+    .view-valitsuse-teenuste-statistika .view-kanaalite-statistika table tfoot tr th,
+    .view-ministeeriumi-teenuste-statistika .view-kanaalite-statistika table tfoot tr th {
+      padding: 10px;
+      text-align: center;
+      font-weight: bold;
+      border: 1px solid;
+      border-color: #F6F5F7; }
+    .view-teenuste-statistika .view-kanaalite-statistika table tfoot tr th.views-field-name, .view-teenuste-statistika .view-kanaalite-statistika table tfoot tr th.views-field-name-i18n,
+    .view-valitsuse-teenuste-statistika .view-kanaalite-statistika table tfoot tr th.views-field-name,
+    .view-valitsuse-teenuste-statistika .view-kanaalite-statistika table tfoot tr th.views-field-name-i18n,
+    .view-ministeeriumi-teenuste-statistika .view-kanaalite-statistika table tfoot tr th.views-field-name,
+    .view-ministeeriumi-teenuste-statistika .view-kanaalite-statistika table tfoot tr th.views-field-name-i18n {
+      text-align: left; }
+
+.view-valitsuse-teenuste-statistika .view-display-id-teenuste_arv_kokku,
+.view-ministeeriumi-teenuste-statistika .view-display-id-teenuste_arv_kokku {
+  position: relative;
+  z-index: 1; }
+  .view-valitsuse-teenuste-statistika .view-display-id-teenuste_arv_kokku .view-content,
+  .view-ministeeriumi-teenuste-statistika .view-display-id-teenuste_arv_kokku .view-content {
+    margin-top: 0px; }
+.content .view-valitsuse-teenuste-statistika > div:nth-of-type(2) .view-display-id-teenuste_arv_kokku, .content
+.view-ministeeriumi-teenuste-statistika > div:nth-of-type(2) .view-display-id-teenuste_arv_kokku {
+  top: 7px; }
+.content .view-valitsuse-teenuste-statistika > div:nth-of-type(3), .content
+.view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) {
+  padding-left: 0px;
+  margin-top: 40px; }
+  .content .view-valitsuse-teenuste-statistika > div:nth-of-type(3) h3, .content
+  .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) h3 {
+    font-size: 20px;
+    color: #00668C;
+    text-shadow: none;
+    float: left;
+    font-size: 20px; }
+  .content .view-valitsuse-teenuste-statistika > div:nth-of-type(3) .view-filters, .content
+  .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) .view-filters {
+    display: none; }
+  .content .view-valitsuse-teenuste-statistika > div:nth-of-type(3) > div:first-of-type, .content
+  .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) > div:first-of-type {
+    margin-bottom: 0px; }
+  .content .view-valitsuse-teenuste-statistika > div:nth-of-type(3) > div > div:first-of-type, .content
+  .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) > div > div:first-of-type {
+    position: relative;
+    z-index: 1;
+    float: left;
+    width: auto;
+    font-size: 17px;
+    font-weight: normal;
+    font-family: "Roboto Condensed", sans-serif;
+    color: #00668C; }
+  .content .view-valitsuse-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type, .content
+  .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type {
+    clear: both; }
+    .content .view-valitsuse-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type div.views-field-name, .content .view-valitsuse-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type div.views-field-name-i18n, .content
+    .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type div.views-field-name, .content
+    .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type div.views-field-name-i18n {
+      width: auto;
+      position: relative;
+      z-index: 1;
+      clear: both;
+      float: left;
+      font-size: 17px;
+      font-weight: normal;
+      font-family: "Roboto Condensed", sans-serif;
+      color: #00668C; }
+    .content .view-valitsuse-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-display-id-teenuste_arv_kokku, .content
+    .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-display-id-teenuste_arv_kokku {
+      top: 37px; }
+    .content .view-valitsuse-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-kanaalite-statistika, .content
+    .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-kanaalite-statistika {
+      padding-left: 0px;
+      padding-bottom: 0px; }
+    .content .view-valitsuse-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-teenuste-statistika .view-header, .content
+    .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-teenuste-statistika .view-header {
+      position: relative;
+      clear: both; }
+      .content .view-valitsuse-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-teenuste-statistika .view-header table, .content
+      .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-teenuste-statistika .view-header table {
+        position: relative;
+        z-index: 0;
+        background: #f0f0f0; }
+        .content .view-valitsuse-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-teenuste-statistika .view-header table tbody tr td, .content
+        .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-teenuste-statistika .view-header table tbody tr td {
+          width: 80px;
+          padding: 15px 0px; }
+      .content .view-valitsuse-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-teenuste-statistika .view-header .views-field-nothing, .content
+      .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-teenuste-statistika .view-header .views-field-nothing {
+        width: 393px; }
+      .content .view-valitsuse-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-teenuste-statistika .view-header .views-field-field-fcf-osutamiste-arv, .content
+      .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-teenuste-statistika .view-header .views-field-field-fcf-osutamiste-arv {
+        width: 126px; }
+      .content .view-valitsuse-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-teenuste-statistika .view-header .views-field-field-fcf-aasta-rahulolu, .content
+      .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-teenuste-statistika .view-header .views-field-field-fcf-aasta-rahulolu {
+        background: transparent;
+        color: #000;
+        width: 125px; }
+      .content .view-valitsuse-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-teenuste-statistika .view-header .views-field-field-fcf-aasta-halduskulu, .content
+      .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-teenuste-statistika .view-header .views-field-field-fcf-aasta-halduskulu {
+        width: 125px; }
+      .content .view-valitsuse-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-teenuste-statistika .view-header .views-field-field-fcf-ajakulu-klientidele, .content
+      .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-teenuste-statistika .view-header .views-field-field-fcf-ajakulu-klientidele {
+        width: 153px; }
+    .content .view-valitsuse-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-ministeeriumi-teenuste-statistika > div:nth-of-type(2) > div > div:last-of-type > span > div > div:last-of-type, .content
+    .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-ministeeriumi-teenuste-statistika > div:nth-of-type(2) > div > div:last-of-type > span > div > div:last-of-type {
+      margin-top: 1px;
+      padding-left: 40px; }
+    .content .view-valitsuse-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-ministeeriumi-teenuste-statistika > div:nth-of-type(2) > div, .content
+    .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-ministeeriumi-teenuste-statistika > div:nth-of-type(2) > div {
+      margin-top: -20px;
+      min-height: 72px; }
+    .content .view-valitsuse-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3), .content
+    .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) {
+      margin-bottom: 40px;
+      margin-top: 0px; }
+      .content .view-valitsuse-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) table tbody tr .views-field-nothing, .content
+      .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) table tbody tr .views-field-nothing {
+        width: 334px;
+        text-align: left; }
+      .content .view-valitsuse-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) table tbody tr .views-field-field-fcf-osutamiste-arv, .content
+      .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) table tbody tr .views-field-field-fcf-osutamiste-arv {
+        width: 105px; }
+      .content .view-valitsuse-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) table tbody tr .views-field-field-fcf-aasta-rahulolu, .content
+      .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) table tbody tr .views-field-field-fcf-aasta-rahulolu {
+        width: 105px; }
+      .content .view-valitsuse-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) table tbody tr .views-field-field-fcf-aasta-halduskulu, .content
+      .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) table tbody tr .views-field-field-fcf-aasta-halduskulu {
+        width: 105px; }
+      .content .view-valitsuse-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) table tbody tr .views-field-field-fcf-ajakulu-klientidele, .content
+      .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) table tbody tr .views-field-field-fcf-ajakulu-klientidele {
+        width: 134px; }
+      .content .view-valitsuse-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) table tbody tr td, .content
+      .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) table tbody tr td {
+        font-weight: bold; }
+
+.page-statistika-ministeerium .content .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) > div {
+  margin-top: -20px;
+  min-height: 72px; }
+  .page-statistika-ministeerium .content .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) > div .view-display-id-teenuste_arv_kokku {
+    top: 37px; }
+  .page-statistika-ministeerium .content .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) > div > div:last-of-type .view-teenuste-statistika > div:last-of-type {
+    margin-top: 1px; }
+
+.page-user #block-system-main {
+  background-color: transparent;
+  float: none;
+  margin: 50px auto 0px auto; }
+  .page-user #block-system-main form input {
+    background-color: #fff;
+    box-shadow: inset 0 0 20px 0 rgba(0, 0, 0, 0.15);
+    border: 1px solid;
+    border-color: #cccccc;
+    color: #000;
+    font-family: Tahoma, Verdana, Segoe, sans-serif;
+    font-size: 14px;
+    height: 3.3em;
+    max-width: 100%;
+    padding: 5px 10px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px; }
+  .page-user #block-system-main form #edit-submit {
+    -webkit-appearance: none;
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding;
+    background-clip: padding-box;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    border-radius: 6px;
+    background: #0085b1;
+    background: -moz-linear-gradient(top, #0085b1 0%, #006a8e 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #0085b1), color-stop(100%, #006a8e));
+    background: linear-gradient(to bottom, #0085b1 0%, #006a8e 100%);
+    display: inline-block;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0085b1', endColorstr='#006a8e', GradientType=0);
+    border: 0;
+    box-shadow: inset 0 2px 1px 0 rgba(255, 255, 255, 0.13), inset 0 -2px 1px 0 rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    color: #fff;
+    font: 14px/20px "Roboto Condensed", sans-serif;
+    height: 17px;
+    line-height: 17px;
+    overflow: visible;
+    padding: 10px 15px;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+    width: auto; }
+    .page-user #block-system-main form #edit-submit:hover {
+      background: #0085b2;
+      /* Old browsers */
+      background: -moz-linear-gradient(top, #0085b2 0%, #0085b2 26%, #007ca5 100%);
+      /* FF3.6+ */
+      background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #0085b2), color-stop(26%, #0085b2), color-stop(100%, #007ca5));
+      /* Chrome,Safari4+ */
+      background: linear-gradient(to bottom, #0085b2 0%, #0085b2 26%, #007ca5 100%);
+      /* W3C */
+      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0085b2', endColorstr='#007ca5', GradientType=0);
+      /* IE6-9 */
+      box-shadow: inset 0 2px 1px 0 rgba(255, 255, 255, 0.13), inset 0 -2px 1px 0 rgba(0, 0, 0, 0.2), 0 0 8px rgba(0, 0, 0, 0.22); }
+  .page-user #block-system-main .block-inner {
+    padding: 0px; }
+
+.front .page .rt-margin .zone-content-wrapper {
+  margin-top: -25px; }
+
+/*# sourceMappingURL=riigiteenused.css.map */

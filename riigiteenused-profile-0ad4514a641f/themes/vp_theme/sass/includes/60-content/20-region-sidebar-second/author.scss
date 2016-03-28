@@ -1,0 +1,28 @@
+
+
+
+@if $layout == global {
+  .block-views-8b63b771a4e217953ac1d537c6ab26a7 {
+    .views-field-field-author-picture {
+      margin-bottom: 19px;
+    }
+
+    .views-field-field-name {
+      color: $color-text-main-blue;
+      font-family: $font_museo500;
+      font-size: 16px;
+      padding-bottom: 3px;
+    }
+    
+    .views-field-field-phone {
+      span {
+        position: absolute !important;
+        height: 1px; width: 1px; 
+        overflow: hidden;
+        clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+        clip: rect(1px, 1px, 1px, 1px);
+      }  
+    }
+    
+  }
+}

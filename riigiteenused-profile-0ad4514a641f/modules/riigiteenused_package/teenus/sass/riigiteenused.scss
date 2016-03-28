@@ -1,0 +1,1541 @@
+.page-node-add-teenus,
+.page-node,
+.page-node-edit.node-type-teenus {
+
+  // Table in node translation page
+  table {
+    thead > tr > th {
+      color: #00678C;
+      font-size: 14px;
+      margin-bottom: 5px;
+      padding: 15px;
+    }
+
+    tbody > tr > td {
+      padding: 15px;
+    }
+
+    margin-bottom: 20px;
+    width: 70%;
+
+    input {
+      width: 100%;
+    }
+  }
+
+  // The collapsible form bg change
+  form {
+    > div {
+      > fieldset.collapsible {
+        html.js & {
+          height: auto;
+          margin-bottom: 30px;
+        }
+        > legend {
+          position: relative;
+          > span.fieldset-legend {
+            html.js & {
+              padding-left: 20px;
+              background: none;
+            }
+            > a {
+              display: inline-block;
+              position: relative;
+              padding-left: 25px;
+              right: 20px;
+              font-family: "Roboto Condensed", sans-serif;
+              font-size: 17px;
+              background: url(../img/collapsed.png) no-repeat 0px 2px;
+            }
+          }
+        }
+      }
+    }
+
+    > div {
+      > fieldset.collapsed {
+        > legend {
+          > span.fieldset-legend {
+            a {
+              background: url(../img/collapse.png) no-repeat 0px 2px;
+            }
+          }
+        }
+      }
+    }
+
+    label, .form-required {
+      color: #00678C;
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    label.option {
+      color: #000;
+    }
+
+    input, select {
+      border-color: #C9C6C6;
+      height: 32px;
+      font-size: 13px;
+    }
+
+    input.form-checkbox, input.form-radio {
+      height: auto;
+      position: relative;
+      bottom: 1px;
+    }
+
+    .form-item input[type="radio"].error,
+    .form-item input[type="checkbox"].error {
+      outline: 2px solid red;
+      -moz-appearance: none;
+    }
+
+    input[type="submit"] {
+      display: block;
+      background: #0263A1;
+      color: #FFF;
+      text-shadow: none;
+      border: none;
+      border-radius: 0px;
+      font-size: 13px;
+      padding: 0px 15px;
+      max-width: 15%;
+    }
+
+    #edit-preview,
+    #edit-preview-changes,
+    #edit-delete,
+    #edit-submit {
+      margin-right: 10px;
+      display: inline-block;
+    }
+
+    textarea {
+      border-color: #C9C6C6;
+      font-size: 13px;
+      padding: 5px;
+    }
+
+    .field-name-field-t-teenuse-aegumise-kp {
+      span {
+        html.js & {
+          background: none;
+          padding-left: 0px;
+          color: #1C93CB;
+          font-size: 14px;
+          margin-bottom: 5px;
+        }
+      }
+      .date-padding {
+        padding: 0px;
+      }
+    }
+
+    tr.odd .form-item,
+    tr.even .form-item {
+      white-space: normal;
+    }
+
+    //#field-c-mootmise-aasta-values
+    .field-multiple-table {
+      width: 100%;
+
+      legend {
+        position: relative;
+        > span {
+          html.js & {
+            background: none;
+            padding-left: 20px;
+          }
+        }
+        a.fieldset-title {
+          display: inline-block;
+          position: relative;
+          padding-left: 20px;
+          right: 20px;
+          color: #000;
+          font-weight: bold;
+          background: url(../img/collapsed.png) no-repeat 0px 2px;
+        }
+      }
+
+      fieldset.collapsed {
+        html.js & {
+          height: auto;
+          padding: 0px;
+          margin: 0px;
+        }
+        legend {
+          > span {
+            a {
+              background: url(../img/collapse.png) no-repeat 0px 2px;
+            }
+          }
+        }
+      }
+
+      td {
+        vertical-align: top;
+        padding: 10px 0px;
+        white-space: initial;
+      }
+
+      > tbody > tr > td {
+        padding: 15px;
+      }
+
+      input[type="submit"] {
+        margin-left: 15px;
+        margin-bottom: 10px;
+      }
+
+      .field-multiple-table {
+        margin-top: 15px;
+        input[type="submit"] {
+          margin-left: 0px;
+        }
+        > thead > tr > th > label {
+          padding-left: 15px;
+        }
+        > tbody {
+          > tr {
+            > td {
+              padding-top: 0px;
+              > fieldset {
+                padding-bottom: 15px;
+                border-bottom: 1px solid #C9C6C6;
+              }
+              .ajax-new-content {
+                fieldset {
+                  padding-bottom: 15px;
+                  border-bottom: 1px solid #C9C6C6;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      thead > tr th:last-of-type, // Drag'n drop and weight values.
+      .delta-order,
+      .field-multiple-drag {
+        display: none;
+      }
+
+      .handle {
+        margin-left: 15px;
+      }
+
+      .draggable {
+        background: #F0F0F0;
+        border: none;
+      }
+
+      .field-name-field-fcf-mootmise-kanal {
+
+        /*input[type="submit"]:first-of-type {
+            margin: 10px 0px;
+            display: block;
+        }*/
+        .fieldset-wrapper {
+
+          .field-name-field-fcf-viide-teenusele {
+            width: 400px;
+            margin-top: 10px;
+          }
+
+          .field-name-field-fcf-kanal {
+            width: auto;
+          }
+
+          .field-name-field-fcf-ajakulu-klientidele {
+            margin-right: 0px;
+          }
+
+          > div {
+            display: inline-block;
+            margin-right: 15px;
+            width: 140px;
+            div {
+              white-space: initial;
+            }
+            .field-suffix {
+              display: none;
+            }
+            select {
+              //width: 140px;
+            }
+            input {
+              width: 100%;
+            }
+          }
+
+        }
+
+      }
+      // Mootmise kanal
+
+    }
+    // Mootmise aasta
+
+  }
+  // Form
+
+  .vertical-tabs {
+    margin-top: 40px;
+  }
+
+  #freeze-height {
+    height: auto !important;
+  }
+
+}
+
+// Page node teenus
+
+.node-type-teenus {
+  article {
+    fieldset {
+      html.js & {
+        height: auto;
+        margin-bottom: 30px;
+      }
+      > legend {
+        position: relative;
+        > span.fieldset-legend {
+          html.js & {
+            padding-left: 20px;
+            background: none;
+          }
+          > a {
+            display: inline-block;
+            position: relative;
+            padding-left: 25px;
+            right: 20px;
+            font-family: "Roboto Condensed", sans-serif;
+            font-size: 17px;
+            background: url(../img/collapsed.png) no-repeat 0px 1px;
+          }
+        }
+      }
+    }
+
+    > div {
+      > fieldset.collapsed {
+        > legend {
+          > span.fieldset-legend {
+            > a {
+              background: url(../img/collapse.png) no-repeat 0px 1px;
+            }
+          }
+        }
+      }
+    }
+
+    fieldset {
+      .fieldset-wrapper {
+        margin-top: 30px;
+        margin-bottom: 30px;
+        font-size: 13px;
+        color: #666666;
+        a {
+          color: #666666;
+        }
+      }
+
+      .field {
+        overflow: hidden;
+        margin-bottom: 10px;
+        .field-label,
+        .field-items {
+          display: inline-block;
+        }
+        .field-items {
+          width: 80%;
+        }
+      }
+    }
+
+    .field-label {
+      width: 165px;
+      color: #00668C;
+      font-size: 14px;
+      font-weight: normal;
+    }
+
+    .field-collection-view {
+      margin: 0px;
+      border: none;
+    }
+
+    .field-collection-view-links,
+    .action-links-field-collection-add {
+      // Hide from backend, this is temp solution.
+      display: none;
+    }
+
+    .group-t-kanaalid {
+
+      .fieldset-wrapper {
+        margin-bottom: -30px;
+      }
+
+      .field-name-field-c-mootmise-aasta {
+        .field-items {
+          width: 100%;
+        }
+      }
+      .field-name-field-fcf-mootmise-aasta {
+        .field-label {
+          font-weight: bold;
+        }
+      }
+      .field-name-field-fcf-mootmise-kanal {
+
+        .field-collection-view {
+          margin-left: 0px;
+          margin-right: 0px;
+          border: none;
+        }
+        .field-label {
+          white-space: nowrap;
+        }
+        .field {
+          float: left;
+          width: 174px;
+          min-height: 50px;
+          border: 1px solid #eee;
+          padding: 5px;
+        }
+        .field-name-field-fcf-viide-teenusele {
+          clear: both;
+          width: 98.7%;
+        }
+      }
+
+    }
+
+  }
+  // Article
+
+}
+
+// Node type teenus
+
+// Teenuste otsing
+
+.block-main-menu-sub-rt-menu {
+  .content {
+    background: url(../img/block-vp-search-tabs-shadow.png) no-repeat 50% 100%;
+    background-size: auto;
+    font-size: 30px;
+    line-height: 30px;
+    margin: 0;
+    padding-top: 0;
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.18);
+    .menu {
+
+      li.active {
+        background: url(../img/block-vp-search-tabs-arrow.png) no-repeat 50% 100%;
+      }
+      li.first {
+        padding-left: 2px;
+        background-position: 45% 100%;
+      }
+      li.last {
+        a {
+          position: relative;
+          top: 2px;
+          width: 101px;
+          font-size: 14px;
+          color: #bd4832;
+          background: url(../img/external.png) no-repeat 95% 41%;
+          &::after {
+            display: none;
+          }
+        }
+      }
+
+      li {
+        float: left;
+        padding: 25px 32px 20px 32px;
+        a {
+          display: inline-block;
+          margin-top: 3px;
+          color: #888;
+          font-family: "Roboto Condensed", sans-serif;
+
+          &::after {
+            display: inline-block;
+            position: relative;
+            top: 5px;
+            left: 32px;
+            width: 1px;
+            height: 30px;
+            content: "";
+            background-color: #ccc;
+          }
+        }
+
+        a:hover {
+          color: #00698C;
+        }
+        a.active-trail {
+          color: #00698C;
+        }
+
+      }
+    }
+  }
+}
+
+.view-teenuste-otsing {
+
+  .views-exposed-widget {
+    float: none;
+    padding: 0px;
+    margin-bottom: 5px;
+    .fieldset-wrapper {
+      margin: 10px 0px 10px 5px;
+    }
+  }
+
+  html.js & {
+    fieldset.collapsible.collapsed {
+      height: auto;
+      margin-bottom: 0px;
+      padding: 0px;
+      .fieldset-legend {
+        background: url(../img/searchplus.png) no-repeat 0% 50%;
+      }
+    }
+    fieldset.collapsible {
+      margin: 0px;
+      padding: 0px;
+      .fieldset-legend {
+        background: url(../img/searchminus.png) no-repeat 0% 50%;
+      }
+
+      a {
+        &:hover {
+          color: #bd4832;
+        }
+        &:focus {
+          color: #bd4832;
+        }
+      }
+    }
+  }
+
+  .form-type-textfield {
+    border-radius: 3px;
+    border: 1px solid #D6D4D0;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    display: block;
+    padding: 4px;
+    input {
+      background: #fff;
+      border: 1px solid #D6D6D6;
+      box-shadow: none;
+      height: 25px;
+      padding: 0 5px;
+      width: 200px
+    }
+  }
+
+  .select2-container {
+    width: 210px !important;
+    span.select2-selection {
+      border-radius: 3px;
+      border: 1px solid #D6D4D0;
+      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+      display: block;
+      padding: 4px;
+      ul {
+        padding: 0px;
+      }
+      li.select2-selection__choice {
+        margin-top: 7px;
+      }
+    }
+  }
+
+  .fieldset-title {
+    font-family: "Roboto Condensed", sans-serif;
+    font-size: 17px;
+    margin-bottom: 4px;
+  }
+
+  .form-checkboxes {
+    input {
+      position: relative;
+      vertical-align: top;
+      top: 3px;
+    }
+    label.option {
+      display: inline-block;
+      width: 180px;
+      font-weight: normal;
+      color: #000;
+      font-size: 12px;
+      line-height: 17px;
+    }
+  }
+
+  select {
+    border-radius: 3px;
+    border: 1px solid #D6D4D0;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    display: block;
+    padding: 4px;
+    height: 32px;
+  }
+
+  .views-submit-button {
+    margin-top: 13px;
+    margin-bottom: 0px;
+  }
+
+  #edit-submit-teenuste-otsing,
+  .go-to-service-catalog-wrapper a {
+    -webkit-appearance: none;
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding;
+    background-clip: padding-box;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    border-radius: 6px;
+    background: #0085b1;
+    background: -moz-linear-gradient(top, #0085b1 0%, #006a8e 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #0085b1), color-stop(100%, #006a8e));
+    background: linear-gradient(to bottom, #0085b1 0%, #006a8e 100%);
+    display: inline-block;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0085b1', endColorstr='#006a8e', GradientType=0);
+    border: 0;
+    box-shadow: inset 0 2px 1px 0 rgba(255, 255, 255, 0.13), inset 0 -2px 1px 0 rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    color: #fff;
+    font: 14px/20px "Roboto Condensed", sans-serif;
+    height: 17px;
+    line-height: 17px;
+    margin: 0 10px 0 0;
+    overflow: visible;
+    padding: 5px 15px;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+    width: auto;
+    &:hover {
+      background: #0085b2;
+      /* Old browsers */
+      background: -moz-linear-gradient(top, #0085b2 0%, #0085b2 26%, #007ca5 100%);
+      /* FF3.6+ */
+      background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #0085b2), color-stop(26%, #0085b2), color-stop(100%, #007ca5));
+      /* Chrome,Safari4+ */
+      background: linear-gradient(to bottom, #0085b2 0%, #0085b2 26%, #007ca5 100%);
+      /* W3C */
+      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0085b2', endColorstr='#007ca5', GradientType=0);
+      /* IE6-9 */
+      box-shadow: inset 0 2px 1px 0 rgba(255, 255, 255, 0.13), inset 0 -2px 1px 0 rgba(0, 0, 0, 0.2), 0 0 8px rgba(0, 0, 0, 0.22);
+    }
+  }
+
+  .views-reset-button {
+    margin-top: 18px;
+    margin-bottom: 0px;
+    margin-left: 3px;
+    #edit-reset {
+      background: none;
+      border: none;
+      border-bottom: 1px solid;
+      border-radius: 0px;
+      padding: 0px 2px;
+      margin-top: 0px;
+      text-shadow: none;
+      box-shadow: none;
+      color: #bd4832;
+      font-family: "Roboto Condensed", sans-serif;
+      font-weight: normal;
+      font-size: 14px;
+    }
+  }
+
+  .views-summary {
+    display: inline-block;
+    width: 24px;
+    margin-left: 5px;
+    margin-bottom: 5px;
+    text-align: center;
+    box-shadow: inset -1px -1px 2px 0 rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    color: #00698c;
+    border-width: 1px;
+    border-bottom-color: #979797;
+    border-left-color: #c4c6c3;
+    border-right-color: #979797;
+    border-style: solid;
+    border-top-color: #c4c6c3;
+    padding: 1px 0px;
+  }
+
+  .disabled-letter {
+    color: rgb(201, 201, 201);
+    background-color: rgb(250, 250, 250);
+  }
+
+  .chosen-letter {
+    border-color: transparent;
+    background-color: #bd4932;
+    a {
+      color: #fff;
+      &:hover {
+        color: #fff;
+      }
+    }
+  }
+
+  .views-summary.show-all-letters {
+    width: 67px;
+  }
+
+  .service-statistic {
+    table tbody {
+      tr {
+        background: none;
+        td {
+          border: 1px solid #F0F0F0;
+          text-align: center;
+          font-size: 11px;
+        }
+      }
+    }
+    table thead {
+      tr {
+        th {
+          color: #00668C;
+          padding: 0px 10px;
+          text-align: center;
+          font-size: 11px;
+          border-bottom: 0px;
+        }
+      }
+    }
+  }
+
+  .view-filters {
+    float: left;
+    position: relative;
+    padding: 15px 20px 16px 20px;
+    width: 210px;
+    background-color: #f5f4ef;
+
+    #edit-field-t-allasutuse-reference-tid-wrapper {
+      margin-top: 10px;
+    }
+
+    #edit-field-t-sihtgrupp-value-wrapper {
+      margin-top: 20px;
+    }
+
+    #edit-field-t-allasutuse-reference-tid {
+      display: none;
+    }
+
+    .views-widget-sort-by {
+      overflow: hidden;
+      width: 210px;
+      margin: 20px 0px 15px 0px;
+      select {
+        width: 100%;
+      }
+      .form-item {
+        label {
+          font-weight: bold;
+          color: #000;
+          font-size: 12px;
+        }
+      }
+    }
+
+    .views-submit-button,
+    .views-reset-button {
+      float: left;
+    }
+
+    .select2-search__field {
+      padding: 0px 0px 0px 5px;
+      box-shadow: none;
+      height: auto;
+    }
+
+  }
+
+  .search-container {
+    float: left;
+    width: 650px;
+    margin-left: 30px;
+
+    > div:nth-of-type(2) {
+      margin-top: 30px;
+      > div {
+        border-bottom: 1px dashed #ccc;
+        margin: 0 0 24px 0;
+        padding: 0 0 24px 0;
+        > span {
+          display: block;
+          float: left;
+          color: #666666;
+          margin-right: 13px;
+          font-weight: bold;
+          font-size: 13px;
+          font-family: "Roboto Condensed", sans-serif;
+          white-space: normal;
+        }
+      }
+    }
+
+    h2.views-field-title {
+      font-size: 17px;
+      &::after {
+        display: inline-block;
+        width: 16px;
+        height: 12px;
+        content: "";
+        background: url(../img/external.png) no-repeat 95% 41%;
+      }
+    }
+
+    .logged-in & {
+      > div:nth-of-type(3) {
+        margin-top: 30px;
+        > div {
+          border-bottom: 1px dashed #ccc;
+          margin: 0 0 24px 0;
+          padding: 0 0 24px 0;
+          > span {
+            display: block;
+            float: left;
+            color: #666666;
+            margin-right: 13px;
+            font-weight: bold;
+            font-size: 13px;
+            font-family: "Roboto Condensed", sans-serif;
+            white-space: normal;
+          }
+        }
+      }
+    }
+
+    .go-to-service-catalog-wrapper {
+      border: 1px dashed #ccc;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .service-conditions,
+    .service-statistic,
+    .views-field-field-t-regulatsioon {
+      cursor: pointer;
+      text-decoration: underline;
+
+      .field-content {
+        display: none;
+        position: absolute;
+        max-width: 395px;
+        min-width: 200px;
+        border: 1px solid #ccc;
+        z-index: 1;
+        background-color: #fff;
+        padding: 20px;
+        -webkit-box-shadow: 5px 13px 11px -13px rgba(0, 0, 0, 0.75);
+        -moz-box-shadow: 5px 13px 11px -13px rgba(0, 0, 0, 0.75);
+        box-shadow: 5px 13px 11px -13px rgba(0, 0, 0, 0.75);
+        ul, li {
+          margin: 0px;
+        }
+      }
+
+      .views-label:hover {
+        color: #bd4832;
+      }
+    }
+
+    .service-conditions,
+    .service-statistic,
+    .views-field-field-t-regulatsioon,
+    .views-field-field-t-teenuse-aegumise-kp,
+    .views-field-field-t-makse,
+    .views-field-field-t-teenuse-seisund,
+    .views-field-view-node {
+      float: left;
+      margin-right: 10px;
+      font-size: 10px;
+
+      span .field-content {
+        border: none;
+        padding: 0px;
+        width: auto;
+        position: static;
+      }
+    }
+
+    .views-field-view-node {
+      a {
+//        background: url(../img/eye.png) no-repeat;
+//        padding-left: 20px;
+        text-decoration: underline;
+      }
+    }
+
+    .views-field-field-t-teenuse-aegumise-kp,
+    .views-field-field-t-makse,
+    .views-field-field-t-teenuse-seisund {
+      background-color: #FF9900;
+      border-radius: 4px;
+      color: #fff;
+      padding: 0 3px;
+
+      div.field-content {
+        display: inline-block;
+      }
+
+      a {
+        text-decoration: underline;
+        color: #fff;
+      }
+    }
+
+    .clear-me {
+      clear: both;
+    }
+
+    .views-field-field-t-kirjeldus {
+      padding: 5px 0px;
+    }
+
+    .views-field-field-t-regulatsioon a {
+      display: block;
+      word-break: break-all;
+    }
+
+    .container-open .views-label {
+      color: #bd4832;
+    }
+
+    .empty {
+      cursor: default;
+      padding: 0;
+      span:hover {
+        color: #333333 !Important;
+      }
+    }
+
+    .no-result-found {
+      font-family: "Roboto Condensed", sans-serif;
+      font-size: 14px;
+      text-align: center;
+      a {
+        display: block;
+        border-bottom: 1px solid;
+        width: 100px;
+        margin: 0 auto;
+      }
+    }
+
+  }
+
+}
+
+// View teenuste otsing
+
+// Views teenuste otsing and statistics
+
+.view-teenuste-otsing,
+.view-teenuste-statistika,
+.view-valitsuse-teenuste-statistika,
+.view-ministeeriumi-teenuste-statistika {
+
+  .view-description-text {
+    padding: 10px;
+    margin-bottom: 20px;
+    color: #00668C;
+    border: 1px dashed #ccc;
+    font-family: "Roboto Condensed", sans-serif;
+    font-size: 14px;
+  }
+
+}
+
+// Views teenuste otsing and statistics
+
+
+// Allasutustee statistika
+.view-teenuste-statistika,
+.view-valitsuse-teenuste-statistika,
+.view-ministeeriumi-teenuste-statistika {
+
+  h1.statistics-page-title {
+    text-shadow: none;
+    margin-bottom: 40px;
+  }
+
+  h2.statistic-page-sub-title {
+    margin-bottom: 20px;
+    float: left;
+    font-size: 28px;
+    text-shadow: none;
+    font-weight: 300;
+  }
+
+  .views-table.cols-2 .view-filters {
+    display: none;
+  }
+
+  table {
+    width: 100%;
+    thead tr th {
+      border-bottom: none;
+    }
+    tbody {
+      border-bottom: 0px;
+      border-top: 0px;
+    }
+  }
+
+  .statistic-sevice-name {
+    cursor: pointer;
+    vertical-align: top;
+    width: 40px;
+    div {
+      position: absolute;
+      background: url(../img/collapse.png) no-repeat 14px 16px #F0F0F0;
+      padding-left: 42px;
+      padding-top: 14px;
+      padding-bottom: 13px;
+      font-weight: bold;
+    }
+  }
+
+  .statistic-sevice-name.collapsed {
+    div {
+      background: url(../img/collapsed.png) no-repeat 14px 16px #F0F0F0;
+      padding-top: 14px;
+    }
+  }
+
+  .statistic-sevice-name.tworows > div {
+    width: 314px;
+    padding-top: 9px;
+    padding-bottom: 8px;
+    line-height: 15px;
+  }
+
+  .statistic-sevice-name.tworows.threerows > div {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    line-height: 13px;
+  }
+
+  .view-filters {
+    float: right;
+
+    #edit-field-fcf-mootmise-aasta-tid-wrapper,
+    .views-submit-button {
+      padding-right: 0px;
+    }
+    .views-widget {
+      width: 115px;
+      display: inline-block;
+      select {
+        width: 100%;
+        height: 24px;
+        line-height: 13px;
+        border: 1px solid #ccc;
+      }
+    }
+    label {
+      font-weight: normal;
+      display: inline-block;
+      padding-right: 10px;
+    }
+  }
+
+  div.views-field-name, div.views-field-name-i18n {
+    font-weight: bold;
+    background: url(../img/collapse.png) no-repeat 14px 2px;
+    padding-left: 42px;
+    top: 37px;
+    cursor: pointer;
+  }
+
+  div.views-field-name.collapsed, div.views-field-name-i18n.collapsed {
+    background: url(../img/collapsed.png) no-repeat 14px 2px;
+  }
+
+
+  .content & {
+    > div:nth-of-type(3) {
+      padding-left: 40px;
+      .views-field-name, .views-field-name-i18n {
+        width: 289px;
+      }
+      table table thead tr:first-of-type th {
+        font-size: 10px;
+        //font-weight: bold;
+        padding: 2px 0px 0px 0px;
+      }
+      table table thead tr:last-of-type th {
+        //padding-top: 1px;
+        //padding-bottom: 3px;
+      }
+      table tbody tr .views-field-name, table tbody tr .views-field-name-i18n {
+        font-weight: normal;
+      }
+      .padding-adjustment th {
+        padding-top: 1px;
+        padding-bottom: 3px;
+      }
+    }
+    .view-footer .view-kanaalite-statistika {
+      .view-content {
+        margin-top: 0px;
+        padding-left: 40px;
+        font-weight: bold;
+      }
+      table {
+        background: #F6F5F7;
+        tbody {
+          tr {
+            td {
+              border-color: #F6F5F7;
+            }
+          }
+        }
+      }
+      .views-field-nothing {
+        width: 334px;
+        text-align: left;
+      }
+      .views-field-field-fcf-osutamiste-arv {
+        width: 105px;
+      }
+      .views-field-field-fcf-aasta-rahulolu {
+        width: 105px;
+      }
+      .views-field-field-fcf-aasta-halduskulu {
+        width: 105px;
+      }
+      .views-field-field-fcf-ajakulu-klientidele {
+        width: 134px;
+      }
+    }
+    div:nth-of-type(2) {
+      .view-kanaalite-statistika {
+        padding-left: 40px;
+      }
+    }
+  }
+
+  .statistic-page-channels-block {
+    clear: both;
+    padding: 15px;
+    margin-bottom: 2px;
+    background: #F0F0F0;
+    h3 {
+      text-shadow: none;
+      color: #00668C;
+      cursor: pointer;
+      background: url(../img/collapse.png) no-repeat 0px 2px;
+      padding-left: 28px;
+    }
+    h3.collapsed {
+      background: url(../img/collapsed.png) no-repeat 0px 2px;
+    }
+  }
+
+  .view-display-id-teenuste_arv_kokku {
+    float: left;
+
+    .view-filters {
+      display: none;
+    }
+
+    .view-content {
+      margin-top: 7px;
+      margin-left: 10px;
+    }
+
+    table {
+      tbody {
+        tr {
+          background-color: #00668C;
+          border: none;
+          td {
+            padding: 0px 6px;
+            color: #fff;
+            border-radius: 4px;
+          }
+        }
+      }
+    }
+  }
+
+  .view-kanaalite-statistika {
+    .view-filters {
+      display: none;
+    }
+
+    .yellow-td {
+      background-color: #EA9B45;
+      color: #fff;
+    }
+    .green-td {
+      background-color: #89B14E;
+      color: #fff;
+    }
+    .red-td {
+      background-color: #C04E37;
+      color: #fff;
+    }
+
+    .view-footer {
+      .views-field-field-fcf-aasta-rahulolu {
+        //background: white;
+      }
+    }
+
+    table {
+      width: 100%;
+      thead {
+        background-color: #F0F0F0;
+        tr.show-titles {
+          th {
+            color: #197FAF;
+          }
+        }
+        th {
+          font-size: 13px;
+          vertical-align: middle;
+          padding: 13px;
+          text-align: center;
+        }
+        .views-field-name, .views-field-name-i18n {
+          text-align: left;
+          width: 330px;
+        }
+
+        .views-field-field-fcf-osutamiste-arv {
+          width: 100px;
+        }
+        .views-field-field-fcf-aasta-rahulolu {
+          width: 100px;
+        }
+
+        .views-field-field-fcf-aasta-halduskulu {
+          width: 100px;
+        }
+        .views-field-field-fcf-ajakulu-klientidele {
+          width: 130px;
+          border-right: 1px solid #F0F0F0;
+        }
+
+      }
+
+      tbody {
+        tr {
+          td {
+            border: 1px solid #F0F0F0;
+            padding: 10px;
+            text-align: center;
+          }
+          .views-field-name, .views-field-name-18n {
+            font-weight: bold;
+            text-align: left;
+          }
+        }
+      }
+      tfoot {
+        background: #F6F5F7;
+        tr {
+          th {
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid;
+            border-color: #F6F5F7;
+          }
+          th.views-field-name, th.views-field-name-i18n {
+            text-align: left;
+          }
+        }
+      }
+    }
+
+  }
+  // Kanalite statistika
+}
+
+// Teenuste statistika
+
+// Valitsuse statistika
+.view-valitsuse-teenuste-statistika,
+.view-ministeeriumi-teenuste-statistika {
+  .view-display-id-teenuste_arv_kokku {
+    position: relative;
+    z-index: 1;
+    .view-content {
+      margin-top: 0px;
+    }
+  }
+
+  .content & {
+    > div:nth-of-type(2) {
+      .view-display-id-teenuste_arv_kokku {
+        top: 7px;
+      }
+      .view-kanaalite-statistika {
+        //padding-left: 40px;
+      }
+    }
+    > div:nth-of-type(3) {
+      padding-left: 0px;
+      margin-top: 40px;
+      h3 {
+        font-size: 20px;
+        color: #00668C;
+        text-shadow: none;
+        float: left;
+        font-size: 20px;
+      }
+      .view-filters {
+        display: none;
+      }
+      > div:first-of-type {
+        //margin-top: 40px;
+        margin-bottom: 0px;
+      }
+      > div {
+        //margin-bottom: 40px;
+        > div:first-of-type {
+          position: relative;
+          z-index: 1;
+          float: left;
+          width: auto;
+          font-size: 17px;
+          font-weight: normal;
+          font-family: "Roboto Condensed", sans-serif;
+          color: #00668C;
+        }
+        > div:last-of-type {
+          clear: both;
+
+          div.views-field-name, div.views-field-name-i18n {
+            width: auto;
+            position: relative;
+            z-index: 1;
+            clear: both;
+            float: left;
+            font-size: 17px;
+            font-weight: normal;
+            font-family: "Roboto Condensed", sans-serif;
+            color: #00668C;
+          }
+          .view-display-id-teenuste_arv_kokku {
+            top: 37px;
+          }
+          .view-kanaalite-statistika {
+            padding-left: 0px;
+            padding-bottom: 0px;
+          }
+          .view-teenuste-statistika {
+            .view-header {
+              position: relative;
+              clear: both;
+              table {
+                position: relative;
+                z-index: 0;
+                background: #f0f0f0;
+                tbody {
+                  tr td {
+                    width: 80px;
+                    padding: 15px 0px;
+                  }
+                }
+              }
+              .views-field-nothing {
+                width: 393px;
+              }
+
+              .views-field-field-fcf-osutamiste-arv {
+                width: 126px;
+              }
+              .views-field-field-fcf-aasta-rahulolu {
+                background: transparent;
+                color: #000;
+                width: 125px;
+              }
+              .views-field-field-fcf-aasta-halduskulu {
+                width: 125px;
+              }
+              .views-field-field-fcf-ajakulu-klientidele {
+                width: 153px;
+              }
+            }
+          }
+          .view-ministeeriumi-teenuste-statistika > div:nth-of-type(2) > div > div:last-of-type > span > div > div:last-of-type {
+            margin-top: 1px;
+            padding-left: 40px;
+          }
+          .view-ministeeriumi-teenuste-statistika > div:nth-of-type(2) > div {
+            margin-top: -20px;
+            min-height: 72px;
+          }
+          .view-ministeeriumi-teenuste-statistika > div:nth-of-type(3) {
+            margin-bottom: 40px;
+            margin-top: 0px;
+            table tbody tr {
+              .views-field-nothing {
+                width: 334px;
+                text-align: left;
+              }
+              .views-field-field-fcf-osutamiste-arv {
+                width: 105px;
+              }
+              .views-field-field-fcf-aasta-rahulolu {
+                width: 105px;
+              }
+              .views-field-field-fcf-aasta-halduskulu {
+                width: 105px;
+              }
+              .views-field-field-fcf-ajakulu-klientidele {
+                width: 134px;
+              }
+
+            }
+            table tbody tr td {
+              font-weight: bold;
+            }
+          }
+        }
+
+      }
+    }
+
+  }
+}
+
+// Ministeeriumi statistika
+.view-ministeeriumi-teenuste-statistika {
+  .content & {
+    .page-statistika-ministeerium & {
+
+      > div:nth-of-type(3) {
+        > div {
+          margin-top: -20px;
+          min-height: 72px;
+          .view-display-id-teenuste_arv_kokku {
+            top: 37px;
+          }
+          > div:last-of-type .view-teenuste-statistika > div:last-of-type {
+            margin-top: 1px;
+          }
+        }
+      }
+
+      > div:nth-of-type(4) {
+        .view-content {
+          //padding-left: 0px;
+          .views-field-nothing {
+            //padding-left: 50px;
+          }
+          .views-field-field-fcf-aasta-rahulolu {
+            //background: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Login on riigiteenused
+
+.page-user {
+  #block-system-main {
+    background-color: transparent;
+    float: none;
+    margin: 50px auto 0px auto;
+    form {
+      input {
+        background-color: #fff;
+        box-shadow: inset 0 0 20px 0 rgba(0, 0, 0, 0.15);
+        border: 1px solid;
+        border-color: #cccccc;
+        color: #000;
+        font-family: Tahoma, Verdana, Segoe, sans-serif;
+        font-size: 14px;
+        height: 3.3em;
+        max-width: 100%;
+        padding: 5px 10px;
+        -moz-border-radius: 3px;
+        -webkit-border-radius: 3px;
+        border-radius: 3px;
+      }
+      #edit-submit {
+        -webkit-appearance: none;
+        -moz-background-clip: padding;
+        -webkit-background-clip: padding;
+        background-clip: padding-box;
+        -webkit-box-sizing: content-box;
+        -moz-box-sizing: content-box;
+        box-sizing: content-box;
+        border-radius: 6px;
+        background: #0085b1;
+        background: -moz-linear-gradient(top, #0085b1 0%, #006a8e 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #0085b1), color-stop(100%, #006a8e));
+        background: linear-gradient(to bottom, #0085b1 0%, #006a8e 100%);
+        display: inline-block;
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0085b1', endColorstr='#006a8e', GradientType=0);
+        border: 0;
+        box-shadow: inset 0 2px 1px 0 rgba(255, 255, 255, 0.13), inset 0 -2px 1px 0 rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        color: #fff;
+        font: 14px/20px "Roboto Condensed", sans-serif;
+        height: 17px;
+        line-height: 17px;
+        overflow: visible;
+        padding: 10px 15px;
+        text-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+        width: auto;
+        &:hover {
+          background: #0085b2;
+          /* Old browsers */
+          background: -moz-linear-gradient(top, #0085b2 0%, #0085b2 26%, #007ca5 100%);
+          /* FF3.6+ */
+          background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #0085b2), color-stop(26%, #0085b2), color-stop(100%, #007ca5));
+          /* Chrome,Safari4+ */
+          background: linear-gradient(to bottom, #0085b2 0%, #0085b2 26%, #007ca5 100%);
+          /* W3C */
+          filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0085b2', endColorstr='#007ca5', GradientType=0);
+          /* IE6-9 */
+          box-shadow: inset 0 2px 1px 0 rgba(255, 255, 255, 0.13), inset 0 -2px 1px 0 rgba(0, 0, 0, 0.2), 0 0 8px rgba(0, 0, 0, 0.22);
+        }
+      }
+    }
+    .block-inner {
+      padding: 0px;
+    }
+  }
+}
+
+// Only for riigiteenused.ee
+
+.rt-margin {
+  .page & {
+    .front & {
+      .zone-content-wrapper {
+        margin-top: -25px;
+      }
+    }
+  }
+} 

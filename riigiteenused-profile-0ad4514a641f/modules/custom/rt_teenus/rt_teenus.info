@@ -1,0 +1,6 @@
+name = Riigiteenused - Teenus
+description = Erinevad muudatused ning hook-ide implementatsioonid mis puudutavad Teenus sisutüüpi.
+core = 7.x
+package = "Riigiteenused"
+
+dependencies[] = teenus

@@ -1,0 +1,953 @@
+<?php
+
+/**
+ * @file
+ * Riigiteenused Install.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function riigiteenused_install() {
+  theme_enable(array('vp_theme'));
+  theme_enable(array('adminimal_theme'));
+  variable_set('theme_default', 'vp_theme');
+  variable_set('admin_theme', 'adminimal_theme');
+
+  actions_save('system_goto_action', 'system', array('url' => '/redirect'), 'Redirect to URL on login');
+}
+
+/**
+ * Lokalize teenus fields
+ */
+function riigiteenused_update_7102() {
+
+  $query = db_select('node','n');
+  $query->fields('n',array('nid','language'));
+
+  $result = $query->execute();
+  foreach ($result as $node_and_language) {
+
+    try {
+      db_update('field_data_field_t_sihtgrupp')
+        ->fields(array('language' => $node_and_language->language))
+        ->condition('entity_id', $node_and_language->nid, '=')
+        ->execute();
+    } catch (Exception $e) {
+      watchdog('debug', $node_and_language->nid.' Has trouble with field_data_field_t_sihtgrupp');
+    }
+
+    try {
+      db_update('field_revision_field_t_sihtgrupp')
+        ->fields(array('language' => $node_and_language->language))
+        ->condition('entity_id', $node_and_language->nid, '=')
+        ->execute();
+    } catch (Exception $e) {
+      watchdog('debug', $node_and_language->nid.' Has trouble with field_revision_field_t_sihtgrupp');
+    }
+
+    try {
+      db_update('field_data_field_t_teenuse_seisund')
+        ->fields(array('language' => $node_and_language->language))
+        ->condition('entity_id', $node_and_language->nid, '=')
+        ->execute();
+    } catch (Exception $e) {
+      watchdog('debug', $node_and_language->nid.' Has trouble with field_data_field_t_teenuse_seisund');
+    }
+
+    try {
+      db_update('field_revision_field_t_teenuse_seisund')
+        ->fields(array('language' => $node_and_language->language))
+        ->condition('entity_id', $node_and_language->nid, '=')
+        ->execute();
+    } catch (Exception $e) {
+      watchdog('debug', $node_and_language->nid.' Has trouble with field_revision_field_t_teenuse_seisund');
+    }
+
+    try {
+      db_update('field_data_field_t_makse')
+        ->fields(array('language' => $node_and_language->language))
+        ->condition('entity_id', $node_and_language->nid, '=')
+        // ->condition('language',$node_and_language->language,'!=')
+        ->execute();
+    } catch (Exception $e) {
+      watchdog('debug', $node_and_language->nid.' Has trouble with field_data_field_t_makse');
+    }
+
+    try {
+      db_update('field_revision_field_t_makse')
+        ->fields(array('language' => $node_and_language->language))
+        ->condition('entity_id', $node_and_language->nid, '=')
+        // ->condition('language',$node_and_language->language,'!=')
+        ->execute();
+    } catch (Exception $e) {
+      watchdog('debug', $node_and_language->nid.' Has trouble with field_revision_field_t_makse');
+    }
+  }
+}
+
+/**
+ * Enable Language switcher fallback.
+ */
+function riigiteenused_update_7101() {
+  module_enable(array('language_switcher_fallback'));
+}
+
+/**
+ * View translate added to dependencies.
+ */
+function riigiteenused_update_7100() {
+  features_revert(array(
+    'teenus' => array('dependencies'),
+  ));
+}
+
+/**
+ * Full description text in search results.
+ */
+function riigiteenused_update_7099() {
+  features_revert(array(
+    'services_search' => array('views_view'),
+  ));
+}
+
+/**
+ * Valitsuse admin permissions.
+ */
+function riigiteenused_update_7098() {
+  features_revert(array(
+    'roles_and_permissions' => array('user_permission'),
+  ));
+}
+
+/**
+ * Disable mimemail module.
+ */
+function riigiteenused_update_7097() {
+  module_disable(array('mimemail'));
+}
+
+/**
+ * Emailing modules added.
+ */
+function riigiteenused_update_7096() {
+  module_enable(array('smtp', 'mailsystem'));
+}
+
+/**
+ * Site default email.
+ */
+function riigiteenused_update_7095() {
+  features_revert(array(
+    'roles_and_permissions' => array('field_base', 'field_instance'),
+  ));
+}
+
+/**
+ * Site default email.
+ */
+function riigiteenused_update_7094() {
+  features_revert(array(
+    'base_configuration' => array('variable'),
+  ));
+}
+
+/**
+ * Description text in statistics view.
+ */
+function riigiteenused_update_7093() {
+  features_revert(array(
+    'services_search' => array('views_view'),
+    'teenus' => array('views_view'),
+  ));
+}
+
+/**
+ * Description text in search view.
+ */
+function riigiteenused_update_7092() {
+  features_revert(array(
+    'services_search' => array('views_view'),
+  ));
+}
+
+/**
+ * Site name.
+ */
+function riigiteenused_update_7091() {
+  features_revert(array(
+    'base_configuration' => array('variable'),
+  ));
+}
+
+/**
+ * Statistics page titles.
+ */
+function riigiteenused_update_7090() {
+  features_revert(array(
+    'teenus' => array('views_view'),
+  ));
+}
+
+/**
+ * Enable menu_item_visibility module.
+ */
+function riigiteenused_update_7088() {
+  module_enable(array('menu_item_visibility'));
+  features_revert(array(
+    'menus' => array('info'),
+  ));
+}
+
+/**
+ * Some of user permissions revoked.
+ */
+function riigiteenused_update_7087() {
+  features_revert(array(
+    'roles_and_permissions' => array('info', 'user_permission'),
+  ));
+}
+
+/**
+ * Show only current language services in views.
+ */
+function riigiteenused_update_7086() {
+  features_revert(array(
+    'teenus' => array('views_view'),
+    'services_search' => array('views_view'),
+  ));
+}
+
+/**
+ * Some fixes in search.
+ */
+function riigiteenused_update_7085() {
+  features_revert(array(
+    'services_search' => array('views_view'),
+  ));
+}
+
+/**
+ * Default value removed from FC.
+ */
+function riigiteenused_update_7084() {
+  features_revert(array(
+    'teenus' => array('field_instance', 'views_view'),
+  ));
+}
+
+/**
+ * jQuery version.
+ */
+function riigiteenused_update_7083() {
+  features_revert(array(
+    'base_configuration' => array('variable'),
+  ));
+}
+
+/**
+ * Clean up disabled view blocks and delete those block's templates.
+ */
+function riigiteenused_update_7082() {
+  features_revert(array(
+    'teenus' => array('views_view'),
+  ));
+}
+
+/**
+ * Additional fields in search results for logged in users.
+ */
+function riigiteenused_update_7081() {
+  features_revert(array(
+    'teenus' => array('views_view'),
+    'base_configuration' => array('variable'),
+    'services_search' => array('views_view'),
+  ));
+}
+
+/**
+ * Small fixes.
+ */
+function riigiteenused_update_7080() {
+  features_revert(array(
+    'base_configuration' => array('variable'),
+    'menus' => array('menu_links'),
+    'taxonomies' => array('taxonomy'),
+    'teenus' => array('field_instance'),
+  ));
+}
+
+/**
+ * Activate tigger module and add system action
+ */
+function riigiteenused_update_7079() {
+  module_enable(array('trigger'));
+  actions_save('system_goto_action', 'system', array('url' => '/redirect'), 'Redirect to URL on login');
+}
+
+/**
+ * Views fixes 2.
+ */
+function riigiteenused_update_7078() {
+  features_revert(array(
+    'teenus' => array('views_view'),
+  ));
+}
+
+/**
+ * Views fixes.
+ */
+function riigiteenused_update_7077() {
+  features_revert(array(
+    'teenus' => array('views_view'),
+  ));
+}
+
+/**
+ * Channel statistics > moved to templates.
+ */
+function riigiteenused_update_7076() {
+  features_revert(array(
+    'teenus' => array('views_view'),
+  ));
+}
+
+/**
+ * Bih changes in statistics. Number of blocks are disabled and logic moved
+ * to templates.
+ */
+function riigiteenused_update_7075() {
+  features_revert(array(
+    'teenus' => array('views_view'),
+  ));
+}
+
+/**
+ * Added Trigger module to dependency
+ */
+function riigiteenused_update_7074() {
+  features_revert(array(
+    'base_configuration' => array('dependencies'),
+  ));
+}
+
+/**
+ * Statistics calculations moved to the templates.
+ */
+function riigiteenused_update_7073() {
+  features_revert(array(
+    'teenus' => array('views_view'),
+  ));
+}
+
+/**
+ * Remove comma from regulation links
+ */
+function riigiteenused_update_7072() {
+  features_revert(array(
+    'services_search' => array('views_view'),
+  ));
+}
+
+/**
+ * H4 to H2
+ */
+function riigiteenused_update_7071() {
+  features_revert(array(
+    'services_search' => array('views_view'),
+  ));
+}
+
+/**
+ * Cache configuration for search view.
+ */
+function riigiteenused_update_7070() {
+  features_revert(array(
+    'services_search' => array('views_view'),
+  ));
+}
+
+/**
+ * Views time cache configured.
+ */
+function riigiteenused_update_7069() {
+  features_revert(array(
+    'teenus' => array('views_view'),
+  ));
+}
+
+/**
+ * Views time cache added.
+ */
+function riigiteenused_update_7068() {
+  features_revert(array(
+    'teenus' => array('views_view'),
+  ));
+}
+
+/**
+ * Changed order in kanalid field groups
+ */
+function riigiteenused_update_7067() {
+  features_revert(array(
+    'teenus' => array('field_instance'),
+  ));
+}
+
+/**
+ * Entitycache module disabled. Memcachce module added.
+ */
+function riigiteenused_update_7066() {
+  module_disable(array('entitycache'));
+  features_revert(array(
+    'base_configuration' => array('info', 'variable'),
+  ));
+}
+
+/**
+ * Entitycache module added.
+ */
+function riigiteenused_update_7065() {
+  module_enable(array('entitycache'));
+  features_revert(array(
+    'base_configuration' => array('info', 'variable'),
+  ));
+}
+
+/**
+ * Reset filters button added.
+ */
+function riigiteenused_update_7064() {
+  features_revert(array(
+    'services_search' => array('views_view'),
+  ));
+}
+
+/**
+ * Path patterns for Teenus content type.
+ */
+function riigiteenused_update_7063() {
+  features_revert(array(
+    'base_configuration' => array('info', 'variable'),
+  ));
+}
+
+/**
+ * Language required for Teenus.
+ */
+function riigiteenused_update_7062() {
+  features_revert(array(
+    'teenus' => array('variable'),
+  ));
+}
+
+/**
+ * 50 search results in view.
+ */
+function riigiteenused_update_7061() {
+  features_revert(array(
+    'services_search' => array('views_view'),
+  ));
+}
+
+/**
+ * Hide eeltingimused if empty.
+ */
+function riigiteenused_update_7060() {
+  features_revert(array(
+    'services_search' => array('views_view'),
+  ));
+}
+
+/**
+ * Login page to the front.
+ */
+function riigiteenused_update_7059() {
+  features_revert(array(
+    'base_configuration' => array('info', 'variable'),
+  ));
+}
+
+/**
+ * Some additional configurations.
+ */
+function riigiteenused_update_7058() {
+  features_revert(array(
+    'services_search' => array('views_view'),
+    'roles_and_permissions' => array('info', 'user_permission'),
+  ));
+}
+
+/**
+ * Access editing services by roles.
+ */
+function riigiteenused_update_7057() {
+  features_revert(array(
+    'menus' => array('menu_links'),
+    'roles_and_permissions' => array('info', 'user_permission'),
+  ));
+}
+
+/**
+ * Added alternative title field and chaned order so that "teenuse osutaja" would be first.
+ */
+function riigiteenused_update_7056() {
+  features_revert(array(
+      'teenus' => array('info', 'field_base', 'field_group', 'field_instance', 'variable'),
+  ));
+}
+
+/**
+ * Search filters order.
+ */
+function riigiteenused_update_7055() {
+  features_revert(array(
+    'services_search' => array('views_view'),
+  ));
+}
+
+/**
+ * Filter by title in teenused search v2.
+ */
+function riigiteenused_update_7054() {
+  features_revert(array(
+    'services_search' => array('views_view'),
+  ));
+}
+
+/**
+ * Filter by title in teenused search .
+ */
+function riigiteenused_update_7053() {
+    features_revert(array(
+        'services_search' => array('views_view'),
+    ));
+}
+
+/**
+ * Redirecting to service most popular channel from search results.
+ */
+function riigiteenused_update_7052() {
+  features_revert(array(
+    'services_search' => array('views_view'),
+  ));
+}
+
+/**
+ * Search by title / description fix.
+ */
+function riigiteenused_update_7051() {
+  features_revert(array(
+    'teenus' => array('views_view'),
+  ));
+}
+
+/**
+ * Search duplicate fix.
+ */
+function riigiteenused_update_7050() {
+  features_revert(array(
+      'services_search' => array('views_view'),
+  ));
+}
+
+/**
+ * Search view attachment fix.
+ */
+function riigiteenused_update_7049() {
+  features_revert(array(
+    'teenus' => array('views_view'),
+  ));
+}
+
+/**
+ * Taxonomies renamed.
+ */
+function riigiteenused_update_7048() {
+  features_revert(array(
+    'teenus' => array('views_view'),
+    'taxonomies' => array('taxonomy'),
+  ));
+}
+
+/**
+ * Search exposed filters rearranged.
+ */
+function riigiteenused_update_7047() {
+  features_revert(array(
+    'services_search' => array('views_view'),
+  ));
+}
+
+/**
+ * Fix in statistics display.
+ */
+function riigiteenused_update_7046() {
+  features_revert(array(
+    'teenus' => array('views_view'),
+  ));
+}
+
+/**
+ * Extra empty cell.
+ */
+function riigiteenused_update_7045() {
+  features_revert(array(
+    'teenus' => array('views_view'),
+  ));
+}
+
+/**
+ * Extra empty cell.
+ */
+function riigiteenused_update_7044() {
+  features_revert(array(
+    'teenus' => array('views_view'),
+  ));
+}
+
+/**
+ * Default jQuery version.
+ */
+function riigiteenused_update_7043() {
+  features_revert(array(
+    'base_configuration' => array('variable'),
+  ));
+}
+
+/**
+ * Title for search page.
+ */
+function riigiteenused_update_7042() {
+  features_revert(array(
+    'teenus' => array('variable'),
+    'services_search' => array('views_view'),
+  ));
+}
+
+/**
+ * Menu links for rt portal.
+ */
+function riigiteenused_update_7041() {
+  features_revert(array(
+    'menus' => array('menu_links'),
+  ));
+}
+
+/**
+ * Menu entries removed from views.
+ */
+function riigiteenused_update_7040() {
+  features_revert(array(
+    'teenus' => array('views_view'),
+  ));
+}
+
+/**
+ * Some uncommited changes.
+ */
+function riigiteenused_update_7039() {
+  features_revert(array(
+    'teenus' => array('field_group', 'field_instance', 'variable'),
+  ));
+}
+
+/**
+ * Comma as decimal separator.
+ */
+function riigiteenused_update_7038() {
+  features_revert(array(
+    'teenus' => array('field_base'),
+  ));
+}
+
+/**
+ * Fix in institution view v2.
+ */
+function riigiteenused_update_7037() {
+  features_revert(array(
+    'teenus' => array('views_view'),
+  ));
+}
+
+/**
+ * Enable API module.
+ */
+function riigiteenused_update_7036() {
+    module_enable(array('rt_teenus_api'));
+}
+
+/**
+ * Default sorting of search results.
+ */
+function riigiteenused_update_7035() {
+  features_revert(array(
+    'services_search' => array('views_view'),
+  ));
+}
+
+/**
+ * Search results for anon user.
+ */
+function riigiteenused_update_7034() {
+  features_revert(array(
+    'teenus' => array('views_view'),
+    'services_search' => array('views_view'),
+  ));
+}
+
+/**
+ * Fix in institution view.
+ */
+function riigiteenused_update_7033() {
+  features_revert(array(
+    'teenus' => array('views_view'),
+  ));
+}
+
+/**
+ * Phone field to text.
+ */
+function riigiteenused_update_7032() {
+  features_revert(array(
+    'teenus' => array('field_base'),
+  ));
+}
+
+/**
+ * Add labels to teenused tabel
+ */
+function riigiteenused_update_7031() {
+  features_revert(array(
+    'teenus' => array('field_base', 'views_view'),
+  ));
+}
+
+/**
+ * Alphabetic filters added to the search view.
+ */
+function riigiteenused_update_7030() {
+  features_revert(array(
+    'services_search' => array('views_view'),
+  ));
+}
+
+/**
+ * Fix in search filters.
+ */
+function riigiteenused_update_7029() {
+  features_revert(array(
+    'services_search' => array('views_view'),
+  ));
+}
+
+/**
+ * Search filters added.
+ */
+function riigiteenused_update_7028() {
+  features_revert(array(
+    'services_search' => array('views_view'),
+  ));
+}
+
+/**
+ * Search view added. Changed Teaser display for Teenus content type.
+ */
+function riigiteenused_update_7027() {
+  module_enable(array('services_search'));
+  features_revert(array(
+    'teenus' => array('field_instance', 'variable'),
+  ));
+}
+
+/**
+ * Changes in types of statistics fields. From int to float v2.
+ */
+function riigiteenused_update_7026() {
+  features_revert(array(
+    'teenus' => array('info', 'field_base', 'field_group', 'field_instance', 'views_view'),
+  ));
+}
+
+/**
+ * Changes in types of statistics fields. From int to float.
+ */
+function riigiteenused_update_7025() {
+  features_revert(array(
+    'teenus' => array('info', 'field_base', 'field_group', 'field_instance', 'views_view'),
+    'roles_and_permissions' => array('info', 'user_permission'),
+  ));
+}
+
+/**
+ * User roles fixes. Ministry admin can change institution and edit users.
+ */
+function riigiteenused_update_7024() {
+  features_revert(array('roles_and_permissions' => array('info', 'user_permission')));
+}
+
+/**
+ * Phone fields type changed to text.
+ */
+function riigiteenused_update_7023() {
+  features_revert(array('teenus' => array('field_base', 'field_instance')));
+}
+
+/**
+ * Fields labels layout.
+ */
+function riigiteenused_update_7022() {
+  features_revert(array('teenus' => array('field_instance')));
+}
+
+/**
+ * Total services statistics block cloned adn added(without text) to some views.
+ */
+function riigiteenused_update_7021() {
+  features_revert(array('teenus' => array('views_view')));
+}
+
+/**
+ * Small additional changes in views v3.
+ */
+function riigiteenused_update_7020() {
+  features_revert(array('teenus' => array('views_view')));
+}
+
+/**
+ * Small additional changes in views v2.
+ */
+function riigiteenused_update_7019() {
+  features_revert(array('teenus' => array('views_view')));
+}
+
+/**
+ * Small additional changes in views.
+ */
+function riigiteenused_update_7018() {
+  features_revert(array('teenus' => array('views_view')));
+}
+
+/**
+ * Government view. Default contextual filter value removed from institution view.
+ */
+function riigiteenused_update_7017() {
+  features_revert(array('teenus' => array('views_view')));
+}
+
+/**
+ * Small fix in fields layout.
+ */
+function riigiteenused_update_7016() {
+  features_revert(array('teenus' => array('field_instance')));
+}
+
+/**
+ * Show only published services and services with status different from "Loomisel".
+ */
+function riigiteenused_update_7015() {
+  features_revert(array('teenus' => array('views_view')));
+}
+
+/**
+ * Small changes in Teenus content type. Updates in view.
+ */
+function riigiteenused_update_7014() {
+  features_revert(array(
+    'teenus' => array('field_base', 'field_instance', 'views_view'),
+  ));
+}
+
+/**
+ * Term hierarchy as default sorting for in views.
+ */
+function riigiteenused_update_7013() {
+  features_revert(array(
+    'teenus' => array('views_view'),
+    'taxonomies' => array('taxonomy')
+  ));
+}
+
+/**
+ * Statistika block hidden on service detail page.
+ */
+function riigiteenused_update_7012() {
+  features_revert(array('teenus' => array('field_group', 'field_instance', 'variable')));
+}
+
+/**
+ * Small changes in instituion view.
+ */
+function riigiteenused_update_7011() {
+  features_revert(array('teenus' => array('views_view')));
+}
+
+/**
+ * Added ID-s for H3 tags.
+ */
+function riigiteenused_update_7010() {
+  features_revert(array('teenus' => array('views_view')));
+}
+
+/**
+ * Government view added.
+ */
+function riigiteenused_update_7009() {
+  features_revert(array('teenus' => array('views_view')));
+}
+
+/**
+ * Ministry view added.
+ */
+function riigiteenused_update_7008() {
+  module_enable(array('views_term_hierarchy_weight_field'));
+  features_revert(array('teenus' => array('views_view')));
+}
+
+/**
+ * Changes in view names.
+ */
+function riigiteenused_update_7007() {
+  features_revert(array('teenus' => array('views_view')));
+}
+
+/**
+ * Aggregation fixes in institution view.
+ */
+function riigiteenused_update_7006() {
+  features_revert(array('teenus' => array('views_view')));
+}
+
+/**
+ * Added block displaying number of services.
+ */
+function riigiteenused_update_7004() {
+  features_revert(array('teenus' => array('views_view')));
+}
+
+/**
+ * Changes in institution statistics view.
+ */
+function riigiteenused_update_7003() {
+  features_revert(array(
+    'teenus' => array('views_view'),
+    'menus' => array('menu_links'),
+  ));
+}
+
+/**
+ * Changes in institution statistics view.
+ */
+function riigiteenused_update_7002() {
+  features_revert(array(
+    'teenus' => array('views_view'),
+    'menus' => array('menu_links'),
+  ));
+}
+
+/**
+ * Changes in institution statistics view.
+ */
+function riigiteenused_update_7001() {
+  features_revert(array('teenus' => array('views_view')));
+}

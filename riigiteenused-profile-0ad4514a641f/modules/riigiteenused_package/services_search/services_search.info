@@ -1,0 +1,11 @@
+name = Services search
+description = FEATURE MODULE - lisab otsingu vaaded.
+core = 7.x
+package = Riigiteenused
+dependencies[] = better_exposed_filters
+dependencies[] = ctools
+dependencies[] = teenus
+dependencies[] = views
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:2
+features[views_view][] = teenuste_otsing
