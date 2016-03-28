@@ -1,6 +1,6 @@
 ##Riigiteenused.ee kood
 
-See on [www.riigiteenused.ee](www.riigiteenused.ee "www.riigiteenused.ee") kood. Sisaldab ka rakenduse arhitektuuri [dokumentatsiooni](https://github.com/MKM-ITAO/riigiteenused_kood/blob/master/Riigiteenusterakendusarhitektuurjatehnilinedokumentatsioon.pdf "https://github.com/MKM-ITAO/riigiteenused_kood/blob/master/Riigiteenusterakendusarhitektuurjatehnilinedokumentatsioon.pdf").
+See on [www.riigiteenused.ee](https://www.riigiteenused.ee/et/user "https://www.riigiteenused.ee/et/user") kood. Sisaldab ka rakenduse arhitektuuri [dokumentatsiooni](https://github.com/MKM-ITAO/riigiteenused_kood/blob/master/Riigiteenusterakendusarhitektuurjatehnilinedokumentatsioon.pdf "https://github.com/MKM-ITAO/riigiteenused_kood/blob/master/Riigiteenusterakendusarhitektuurjatehnilinedokumentatsioon.pdf").
 
 Kogu rakenduse kood on [siin](https://github.com/MKM-ITAO/riigiteenused_kood/tree/master/riigiteenused-profile-0ad4514a641f "https://github.com/MKM-ITAO/riigiteenused_kood/tree/master/riigiteenused-profile-0ad4514a641f") ning selle tehniline dokumentatsioon [siin](https://github.com/MKM-ITAO/riigiteenused_kood/blob/master/Teenuste%20kataloog%20rakenduse%20dokumentatsioon.pdf "https://github.com/MKM-ITAO/riigiteenused_kood/blob/master/Teenuste%20kataloog%20rakenduse%20dokumentatsioon.pdf"). 
 
