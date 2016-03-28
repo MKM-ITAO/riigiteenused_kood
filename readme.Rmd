@@ -5,4 +5,7 @@ See on [www.riigiteenused.ee](https://www.riigiteenused.ee/et/user "https://www.
 Kogu rakenduse kood on [siin](https://github.com/MKM-ITAO/riigiteenused_kood/tree/master/riigiteenused-profile-0ad4514a641f "https://github.com/MKM-ITAO/riigiteenused_kood/tree/master/riigiteenused-profile-0ad4514a641f") ning selle tehniline dokumentatsioon [siin](https://github.com/MKM-ITAO/riigiteenused_kood/blob/master/Teenuste%20kataloog%20rakenduse%20dokumentatsioon.pdf "https://github.com/MKM-ITAO/riigiteenused_kood/blob/master/Teenuste%20kataloog%20rakenduse%20dokumentatsioon.pdf"). 
 
 Kodulehtedele installeeritav otsingu ja statistikamooduli kood on [siin](https://github.com/MKM-ITAO/riigiteenused_kood/blob/master/riigiteenused_package.zip "https://github.com/MKM-ITAO/riigiteenused_kood/blob/master/riigiteenused_package.zip").
+
 <a href="https://www.riigiteenused.ee/et/user" target="_blank">example</a>
+
+<a href="http://example.com/" target="_blank">Hello, world!</a>
