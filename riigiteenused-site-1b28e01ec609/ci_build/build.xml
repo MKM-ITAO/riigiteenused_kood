@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="riigiteenused" default="build">
+
+    <!--PROPERTIES FILES-->
+    <property file="build_properties/build.properties" />
+    <property file="build_properties/project.properties" />
+
+    <!--LOCAL PROPERTIES-->
+
+    <!--<target name="build" depends="init, clean, verify, analyze" />-->
+
+    <!--<target name="docs" depends="init, clean, phpdoc, phpcb" />-->
+
+    <!-- TARGETS BELOW -->
+    <target name="build" depends="build-site, site-install" />
+
+    <target name="site-install" depends="init, create-db" unless="project.installed">
+        <drush command="site-install" assume="yes">
+            <param>${project.profile.name}</param>
+            <option name="account-name">${project.drupal.user.name}</option>
+            <option name="account-pass">${project.drupal.user.pass}</option>
+            <option name="db-url">mysql://${mysql.user.default}:${mysql.password.default}@${mysql.host.default}/${mysql.db_name.default}</option>
+            <param>-y</param>
+            <param>-v</param>
+            <option name="locale">en</option>
+        </drush>
+        <!-- Set property to prevent target from being executed multiple times -->
+        <property name="project.installed" value="true"/>
+    </target>
+
+    <target name="build-site" depends="init, create-db">
+        <echo>Running ./build</echo>
+        <exec executable="./build" dir="${project.site.dir}" />
+
+        <echo>Moving web directory</echo>
+        <if>
+          <available file="${project.drupal.dir}" type="dir" />
+          <then>            
+            <move file="${project.drupal.dir}" tofile="../web-old"/>
+          </then>
+          <else>
+            <echo message="...nothing to move" />
+          </else>
+        </if>
+
+        <echo>Creating site from platform.make file</echo>
+        <drush command="make" assume="yes" dir="${project.site.dir}">
+            <param>--working-copy</param>
+            <param>--force-complete</param>
+            <param>--concurrency=10</param>
+            <param>platform.make</param>
+            <param>web</param>
+        </drush>
+
+        <!--<exec executable="rm">-->
+            <!--<arg>-rf</arg>-->
+            <!--<arg>../web-old/sites/all</arg>-->
+        <!--</exec>-->
+        <!--<move file="../web/sites/all" tofile="../web-old/sites/."/>-->
+        <!--<exec executable="rm">-->
+            <!--<arg>-rf</arg>-->
+            <!--<arg>../web/sites</arg>-->
+        <!--</exec>-->
+        <!--<move file="../web-old/sites" tofile="../web/sites"/>-->
+        <!--<exec executable="rm">-->
+            <!--<arg>-rf</arg>-->
+            <!--<arg>../web-old</arg>-->
+        <!--</exec>-->
+
+        <!--<exec executable="chmod">-->
+            <!--<arg>-R</arg>-->
+            <!--<arg>u+w</arg>-->
+            <!--<arg>../web</arg>-->
+        <!--</exec>-->
+    </target>
+
+    <target name="create-db">
+        <exec executable="mysqladmin">
+            <arg line="-u${mysql.user.default} -p${mysql.password.default} create ${mysql.db_name.default}" />
+        </exec>
+
+        <echo>database created</echo>
+    </target>
+
+    <target name="init" depends="setup-phing-drush">
+        <tstamp>
+            <format property="touch.time" pattern="dd_MM_yyyy" />
+        </tstamp>
+
+        <mkdir dir="${log.dir}" />
+        <mkdir dir="${log.dir}/${log.dir.coverage}" />
+
+        <echo>initialized</echo>
+    </target>
+
+    <!-- ### Setup Phing Drush integration -->
+    <target name="setup-phing-drush">
+        <!-- Register as custom Phing task -->
+        <taskdef name="drush" classname="DrushTask" classpath="${build.toolsdir}/phing-drush" />
+
+        <!-- Run drush from the project Drupal directory -->
+        <property name="drush.root" value="${project.drupal.dir}"/>
+        
+        <echo>phing-drush task added</echo>
+    </target>
+
+</project>

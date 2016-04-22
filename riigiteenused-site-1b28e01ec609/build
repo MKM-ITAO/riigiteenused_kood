@@ -1,0 +1,25 @@
+#!/bin/bash
+# Execute `platform.make` which will clone Drupal core among with our
+# installation profile placing it into the appropriate folder (`profiles`).
+if [ -d web ]; then
+mv web web-old
+fi
+
+if [ "$DRUSH" == "" ]; then
+DRUSH="drush"
+fi
+
+$DRUSH make --no-gitinfofile --working-copy --force-complete --concurrency=10 platform.make web
+
+chmod -R u+w web-old
+
+if [ -d web-old ]; then
+    # Sites all should be populated by our make file, so lets' remove that.
+    rm -rf web-old/sites/all
+    mv web/sites/all web-old/sites/.
+    rm -rf web/sites
+    mv web-old/sites web/sites
+    rm -rf web-old
+fi
+
+chmod -R u+w web

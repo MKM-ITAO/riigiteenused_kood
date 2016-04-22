@@ -1,0 +1,7 @@
+#!/bin/bash
+./build
+rm -rf ../web/profiles/riigiteenused/
+cp -Rf web/profiles/riigiteenused/ ../web/profiles/
+cd ../web/
+drush updb -y
+drush cc all
